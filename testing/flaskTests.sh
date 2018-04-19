@@ -18,16 +18,4 @@ else
 	failedTests=1
 fi
 
-
-TEST_NAME="deliberately failing test"
-curlOutput=$(curl -X GET 137.112.89.91:5005 -s --connect-timeout 5)
-echo -e ">> ${curlOutput}"
-correct="not hello"
-if [ "$curlOutput" = "$correct" ] ; then
-	echo -e "${GREEN}${TEST_NAME} passed ${NC}"
-else
-	echo -e "${RED}${TEST_NAME} failed; should be ${NC} $correct"
-	failedTests=1
-fi
-
 exit $failedTests
