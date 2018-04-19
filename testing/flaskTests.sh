@@ -1,9 +1,10 @@
-curlOutput=$(curl -X GET 137.112.89.91:5005/ -s -w '%{http_code}')
+#!/bin/bash
+curlOutput=$(curl -X GET 137.112.89.91:5005 -s)
 echo -e ">> ${curlOutput}"
 correct="hello"
 if [ "$curlOutput" = "$correct" ] ; then
-	echo -e "replaced get pass"
+	echo -e "top-level get passed"
 else
-	echo -e "failed: should be $correct"
+	echo -e "top-level get failed; should be $correct"
 	exit 1
 fi
