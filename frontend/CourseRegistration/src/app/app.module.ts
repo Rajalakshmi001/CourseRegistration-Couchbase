@@ -9,7 +9,8 @@ import { CreateCourseComponent } from './components/create-course/create-course.
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { HttpModule, Http } from '@angular/http';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import {MatButtonModule} from '@angular/material/button';
     MatInputModule,
     ReactiveFormsModule,
     MatButtonModule,
+    HttpModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

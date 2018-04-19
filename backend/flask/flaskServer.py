@@ -4,6 +4,7 @@ app = Flask(__name__)
 
 
 @app.route('/')
+@crossdomain(origin='*', methods=['GET'], headers=['content-type'])
 def hello():
     return 'root'
 

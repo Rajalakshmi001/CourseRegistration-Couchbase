@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Http } from '@angular/http';
+import { HttpClient } from 'selenium-webdriver/http';
 
 @Component({
   selector: 'app-create-course',
@@ -9,16 +11,16 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 export class CreateCourseComponent implements OnInit {
 
   public form: FormGroup;
-  constructor() { }
+  constructor(public http: Http) { }
 
   ngOnInit() {
     this.form = new FormGroup({
-      name: new FormControl('', Validators.required)
+      name: new FormControl('', Validators.required),
     });
 
-    setInterval(() => {
-      console.log(this.form.value);
-    }, 1000);
+    this.http.get('http://137.112.89.91:5005/').subscribe(data => {
+      console.log(data);
+    });
   }
 
 }
