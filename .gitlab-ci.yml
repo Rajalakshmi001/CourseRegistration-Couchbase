@@ -3,12 +3,14 @@ stages:
 - restart
 - test
 
+before_script: 
+- rm -f /tmp/privkey
+- echo "$SSH_PRIVATE_KEY" > /tmp/privkey
+- chmod 400 /tmp/privkey
+
 push_to_server:
     stage: deploy
     script:
-    - rm -f /tmp/privkey
-    - echo "$SSH_PRIVATE_KEY" > /tmp/privkey
-    - chmod 400 /tmp/privkey
     - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git pull"
     
 restart_server:
