@@ -1,3 +1,5 @@
+[![pipeline status](https://ada.csse.rose-hulman.edu/verlaqd/433-CourseReg/badges/master/pipeline.svg)](https://ada.csse.rose-hulman.edu/verlaqd/433-CourseReg/commits/master)
+
 ## Course Registration
 
 ## VM Information
