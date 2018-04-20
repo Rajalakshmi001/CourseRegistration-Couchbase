@@ -10,6 +10,11 @@ push_to_server:
     - chmod 400 /tmp/privkey
     - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git pull"
     
+restart_server
+    stage: restart
+    script: 
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "./restartFlask.sh"
+    
 run_tests:
     stage: test
     script:
