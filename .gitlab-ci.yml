@@ -1,6 +1,14 @@
 stages:
+- deploy
+- restart
 - test
 
+push_to_server:
+    stage: deploy
+    script:
+    - echo $SSH_PRIVATE_KEY > /tmp/privkey
+    - ssh -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git pull"
+    
 run_tests:
     stage: test
     script:
