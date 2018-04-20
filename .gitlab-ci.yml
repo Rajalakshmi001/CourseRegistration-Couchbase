@@ -7,6 +7,8 @@ push_to_server:
     stage: deploy
     script:
     - echo $SSH_PRIVATE_KEY > /tmp/privkey
+    - cat /tmp/privkey
+    - cat /tmp/privkey.pub
     - ssh -o StrictHostKeyChecking=no csse@433-21.csse.rose-hulman.edu uptime
     - ssh -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git pull"
     
