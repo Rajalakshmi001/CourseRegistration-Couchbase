@@ -13,6 +13,7 @@ def hello():
 @app.route('/user/<userId>', methods=['PUT'])
 @app.route('/user/<userId>', methods=['POST'])
 @app.route('/user/<userId>', methods=['DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
 def user(userId):
     if request.method == 'GET':
         return userGet(request)
@@ -23,22 +24,24 @@ def user(userId):
     if request.method == 'DELETE':
         return userDelete(request)
 
-def userGet():
+def userGet(request):
+    content = request.get_json()
     pass
 
-def userPut():
+def userPut(request):
     pass
 
-def userPost():
+def userPost(request):
     pass
 
-def userDelete():
+def userDelete(request):
     pass
 
 @app.route('/course/<courseId>', methods=['GET'])
 @app.route('/course/<courseId>', methods=['PUT'])
 @app.route('/course/<courseId>', methods=['POST'])
 @app.route('/course/<courseId>', methods=['DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
 def course():
     if request.method == 'GET':
         return courseGet(request)
@@ -53,6 +56,7 @@ def course():
 @app.route('/offering/<offeringId>', methods=['PUT'])
 @app.route('/offering/<offeringId>', methods=['POST'])
 @app.route('/offering/<offeringId>', methods=['DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
 def offering(offeringId):
     if request.method == 'GET':
         return offeringGet(request)
@@ -67,6 +71,7 @@ def offering(offeringId):
 @app.route('/professor/<professorId>', methods=['PUT'])
 @app.route('/professor/<professorId>', methods=['POST'])
 @app.route('/professor/<professorId>', methods=['DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
 def professor(professorId):
     if request.method == 'GET':
         return professorGet(request)
@@ -81,6 +86,7 @@ def professor(professorId):
 @app.route('/quarter/<quarterId>', methods=['PUT'])
 @app.route('/quarter/<quarterId>', methods=['POST'])
 @app.route('/quarter/<quarterId>', methods=['DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
 def quarter(quarterId):
     if request.method == 'GET':
         return quarterGet(request)
@@ -111,10 +117,12 @@ def getRecommendations(userId):
 @app.route('/register/<userId>/<offeringId>', methods=['PUT'])
 @app.route('/register/<userId>/<offeringId>', methods=['POST'])
 @app.route('/register/<userId>/<offeringId>', methods=['DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
 def registerForCourse(userId, offeringId):
     pass
 
 @app.route('/generateSchedules/', methods=['POST'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
 def generateSchedules():
     pass
 

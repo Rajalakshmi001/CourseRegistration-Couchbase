@@ -10,6 +10,8 @@
         <input matInput placeholder="Course Name" formControlName="name">
       </mat-form-field>
     </form>
-    <button mat-button [disabled]="!form.valid">Basic</button>
+    <button mat-button [disabled]="!form.valid" *ngIf="text.display">Basic</button>
+    {{text.name}}
+    <span *ngFor="let course of text.class">{{course}}</span>
   </mat-card-content>
 </mat-card>

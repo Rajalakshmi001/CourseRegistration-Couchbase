@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Http } from '@angular/http';
 import { HttpClient } from 'selenium-webdriver/http';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'app-create-course',
@@ -11,6 +12,12 @@ import { HttpClient } from 'selenium-webdriver/http';
 export class CreateCourseComponent implements OnInit {
 
   public form: FormGroup;
+  public text = {
+    name: 'Bill',
+    class: ['333', '433'],
+    display: false,
+  };
+
   constructor(public http: Http) { }
 
   ngOnInit() {
