@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python --version
+python3 --version
 
 RED='\033[0;31m'
 NC='\033[0m'
@@ -12,7 +12,7 @@ failedTests=0
 TEST_NAME="top-level get"
 curlOutput=$(curl -X GET 137.112.89.91:5005 -s --connect-timeout 5)
 echo -e ">> ${curlOutput}"
-correct="hello"
+correct="root"
 if [ "$curlOutput" = "$correct" ] ; then
 	echo -e "${GREEN}${TEST_NAME} passed ${NC}"
 else
