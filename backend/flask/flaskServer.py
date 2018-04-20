@@ -42,12 +42,13 @@ def userDelete(request):
 @app.route('/course/<courseId>', methods=['PUT'])
 @app.route('/course/<courseId>', methods=['POST'])
 @app.route('/course/<courseId>', methods=['DELETE'])
+@app.route('/course/<courseId>', methods=['OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
-def course():
+def course(courseId):
     if request.method == 'GET':
         return courseGet(request)
     if request.method == 'PUT':
-        return coursePut(request)
+        return coursePut(courseId, request)
     if request.method == 'POST':
         return coursePost(request)
     if request.method == 'DELETE':
@@ -101,8 +102,10 @@ def quarter(quarterId):
 def courseGet():
     pass
 
-def coursePut(request):
-    return request.to_json()
+def coursePut(courseId, request):
+    return Response(response=json.dumps(request.get_json()), status=200, mimetype='application/json')
+
+
 
 def coursePost():
     pass
