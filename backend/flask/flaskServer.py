@@ -1,5 +1,6 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory
-import crossdomain from './crossorigin'
+from crossorigin import crossdomain
+
 app = Flask(__name__)
 
 
