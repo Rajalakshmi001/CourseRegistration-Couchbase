@@ -100,8 +100,8 @@ def quarter(quarterId):
 def courseGet():
     pass
 
-def coursePut():
-    pass
+def coursePut(request):
+    return request.to_json()
 
 def coursePost():
     pass
