@@ -6,10 +6,8 @@ stages:
 push_to_server:
     stage: deploy
     script:
-    - ssh-keygen -b 2048 -t rsa -f /tmp/sshkey -q -N ""
-    - cat /tmp/sshkey
-    - cat /tmp/sshkey.pub
     - echo $SSH_PRIVATE_KEY > /tmp/privkey
+    - echo $SSH_PRIVATE_KEY
     - ssh -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git pull"
     
 run_tests:
