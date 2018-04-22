@@ -1,0 +1,37 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Register Student For A Course</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <form [formGroup]="form">
+        <mat-form-field>
+          <input type="text" matInput formControlName="studentId" placeholder="Select Student Username" [matAutocomplete]="studentAuto">
+        </mat-form-field>
+        <mat-autocomplete #studentAuto="matAutocomplete">
+          <mat-option *ngFor="let student of (students | filterPipe:form.get('studentId').value)" [value]="student">
+            {{ student }}
+          </mat-option>
+        </mat-autocomplete>
+  
+        <mat-form-field>
+          <mat-select placeholder="Select Quarter" formControlName="quarter" class="full-width-input">
+            <mat-option *ngFor="let quarter of quarters" [value]="quarter.value">
+              {{quarter.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Select Year" formControlName="year" class="full-width-input">
+            <mat-option *ngFor="let year of years" [value]="year">
+              {{year}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br/>
+        <button mat-button [disabled]="form.invalid" color="primary" (click)="register()">Lookup</button>
+      </form>
+
+      
+    </mat-card-content>
+  </mat-card>

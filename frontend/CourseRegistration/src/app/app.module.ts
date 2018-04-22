@@ -16,6 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { CreateUserComponent } from './components/create-student/create-student.component';
 import { RegisterComponent, FilterPipe } from './components/register/register.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { LookupComponent } from './components/lookup/lookup.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     CreateUserComponent,
     RegisterComponent,
     FilterPipe,
+    LookupComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +42,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     HttpModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

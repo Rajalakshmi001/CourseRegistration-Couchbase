@@ -5,6 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { CreateUserComponent } from './components/create-student/create-student.component';
 import { RegisterComponent } from './components/register/register.component';
+import { LookupComponent } from './lookup/lookup.component';
 
 const routes: Routes = [{
   path: 'user',
@@ -25,6 +26,10 @@ const routes: Routes = [{
 {
   path: 'register',
   component: RegisterComponent,
+},
+{
+  path: 'lookup',
+  component: LookupComponent,
 }];
 
 @NgModule({
