@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserPageComponent } from './components/user-page/user-page.component';
 import { CreateUserComponent } from './components/create-student/create-student.component';
+import { RegisterComponent } from './components/register/register.component';
 
 const routes: Routes = [{
   path: 'user',
@@ -20,6 +21,10 @@ const routes: Routes = [{
 {
   path: 'create-user',
   component: CreateUserComponent,
+},
+{
+  path: 'register',
+  component: RegisterComponent,
 }];
 
 @NgModule({

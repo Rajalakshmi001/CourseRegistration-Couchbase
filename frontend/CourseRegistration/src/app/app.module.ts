@@ -14,6 +14,8 @@ import { HttpModule, Http } from '@angular/http';
 import { CreateOfferingComponent } from './components/create-offering/create-offering.component';
 import { MatSelectModule } from '@angular/material/select';
 import { CreateUserComponent } from './components/create-student/create-student.component';
+import { RegisterComponent, FilterPipe } from './components/register/register.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { CreateUserComponent } from './components/create-student/create-student.
     CreateCourseComponent,
     CreateOfferingComponent,
     CreateUserComponent,
+    RegisterComponent,
+    FilterPipe,
   ],
   imports: [
     BrowserModule,
@@ -34,6 +38,7 @@ import { CreateUserComponent } from './components/create-student/create-student.
     MatButtonModule,
     HttpModule,
     MatSelectModule,
+    MatAutocompleteModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
