@@ -14,7 +14,6 @@ export class CreateCourseComponent implements OnInit {
   public form: FormGroup;
   public text = {
     name: 'Bill',
-    class: ['333', '433'],
     display: false,
   };
 
@@ -23,6 +22,7 @@ export class CreateCourseComponent implements OnInit {
   ngOnInit() {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
+      description: new FormControl('', Validators.required),
     });
 
     this.http.get('http://137.112.89.91:5005/').subscribe(data => {

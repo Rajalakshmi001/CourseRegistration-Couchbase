@@ -1,13 +1,15 @@
 <mat-card>
   <mat-card-header>
     <mat-card-title>Create A New Course</mat-card-title>
-    <mat-card-subtitle>subtile</mat-card-subtitle>
   </mat-card-header>
 
   <mat-card-content>
     <form [formGroup]="form">
       <mat-form-field class="full-width-input">
         <input matInput placeholder="Course Name" formControlName="name">
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput placeholder="Description" formControlName="description">
       </mat-form-field>
     </form>
     <button mat-button [disabled]="!form.valid" (click)="createCourse()">Create</button>
