@@ -12,6 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpModule, Http } from '@angular/http';
 import { CreateOfferingComponent } from './components/create-offering/create-offering.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { CreateOfferingComponent } from './components/create-offering/create-off
     ReactiveFormsModule,
     MatButtonModule,
     HttpModule,
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

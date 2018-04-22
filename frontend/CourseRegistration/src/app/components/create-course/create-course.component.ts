@@ -22,6 +22,7 @@ export class CreateCourseComponent implements OnInit {
   ngOnInit() {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
+      courseNumber: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
     });
 
