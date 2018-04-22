@@ -10,6 +10,6 @@
         <input matInput placeholder="Course Name" formControlName="name">
       </mat-form-field>
     </form>
-    <button mat-button [disabled]="!form.valid">Create</button>
+    <button mat-button [disabled]="!form.valid" (click)="createCourse()">Create</button>
   </mat-card-content>
 </mat-card>

@@ -30,4 +30,13 @@ export class CreateCourseComponent implements OnInit {
     });
   }
 
+  public createCourse() {
+    this.http.put('http://137.112.89.91:5005/course/1', {
+      someData: 'my string',
+      otherVar: 5
+    }).subscribe(data => {
+      console.log(data);
+    });
+  }
+
 }
