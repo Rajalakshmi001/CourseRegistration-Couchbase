@@ -32,3 +32,6 @@ rollback_to_prev:
     script:
     - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git reset --hard master@{1}"
     when: on_failure
+    
+tags: 
+- ubuntu
