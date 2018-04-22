@@ -16,7 +16,7 @@ push_to_server:
 restart_server:
     stage: restart
     script: 
-    - echo "temporarily disabled" # (sleep 3 && echo "exiting" && exit 0) & nohup ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "nohup ./restartFlask.sh"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "sudo systemctl restart FlaskService.service && sleep 1 && /bin/bash getFlask.sh"
     
 run_tests:
     stage: test
