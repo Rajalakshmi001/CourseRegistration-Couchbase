@@ -3,6 +3,7 @@ stages:
 - restart
 - test
 - rollback
+- test
 
 before_script: 
 - rm -f /tmp/privkey
@@ -24,6 +25,7 @@ run_tests:
     script:
     - chmod +x testing/flaskTests.sh
     - ./testing/flaskTests.sh
+    when: on_success
     
 rollback_to_prev:
     stage: rollback
