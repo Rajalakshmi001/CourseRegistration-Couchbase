@@ -11,12 +11,14 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpModule, Http } from '@angular/http';
+import { CreateOfferingComponent } from './components/create-offering/create-offering.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UserPageComponent,
     CreateCourseComponent,
+    CreateOfferingComponent,
   ],
   imports: [
     BrowserModule,
