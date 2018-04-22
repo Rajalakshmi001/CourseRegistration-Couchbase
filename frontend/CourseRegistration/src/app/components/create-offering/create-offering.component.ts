@@ -12,6 +12,7 @@ export class CreateOfferingComponent implements OnInit {
     public professors: { name: string, value: string }[];
     public courses: { name: string, value: string }[];
     public quarters: { name: string, value: string }[];
+    public years: number[];
     public hours: number[];
 
     constructor() { }
@@ -21,6 +22,7 @@ export class CreateOfferingComponent implements OnInit {
             professor: new FormControl('', Validators.required),
             course: new FormControl('', Validators.required),
             quarter: new FormControl('', Validators.required),
+            year: new FormControl('', Validators.required),
             hour: new FormControl('', Validators.required),
             capacity: new FormControl(0, Validators.min(0)),
             enrolled: new FormControl(0)
@@ -32,8 +34,13 @@ export class CreateOfferingComponent implements OnInit {
         ];
 
         this.quarters = [
-            { name: 'Spring 2018', value: 'q1' }
+            { name: 'Spring', value: 'spring' },
+            { name: 'Summer', value: 'summer' },
+            { name: 'Fall', value: 'fall' },
+            { name: 'Winter', value: 'winter' },
         ];
+
+        this.years = [2017, 2018, 2019, 2020];
 
         this.courses = [
             { name: 'CSSE 433', value: 'c1' }

@@ -13,12 +13,19 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                    <mat-select placeholder="Select Quarter" formControlName="quarter" class="full-width-input">
-                        <mat-option *ngFor="let quarter of quarters" [value]="quarter.value">
-                            {{quarter.name}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <mat-select placeholder="Select Quarter" formControlName="quarter" class="full-width-input">
+                    <mat-option *ngFor="let quarter of quarters" [value]="quarter.value">
+                        {{quarter.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-select placeholder="Select Year" formControlName="year" class="full-width-input">
+                    <mat-option *ngFor="let year of years" [value]="year">
+                        {{year}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
             <mat-form-field>
                 <mat-select placeholder="Select Professor" formControlName="professor" class="full-width-input">
                     <mat-option *ngFor="let prof of professors" [value]="prof.value">
