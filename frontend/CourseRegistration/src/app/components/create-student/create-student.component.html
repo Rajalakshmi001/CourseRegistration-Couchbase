@@ -11,6 +11,12 @@
       <mat-form-field class="full-width-input">
         <input matInput placeholder="Username" formControlName="username">
       </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Student or Professor" formControlName="userType" class="full-width-input">
+          <mat-option value="student">Student</mat-option>
+          <mat-option value="prof">Professor</mat-option>
+        </mat-select>
+      </mat-form-field>
       <br/>
       <button mat-button [disabled]="form.invalid" color="primary" (click)="createStudent()">Create</button>
     </form>

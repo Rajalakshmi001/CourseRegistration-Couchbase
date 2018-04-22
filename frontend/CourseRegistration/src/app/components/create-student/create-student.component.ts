@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './create-student.component.html',
   styleUrls: ['./create-student.component.scss']
 })
-export class CreateStudentComponent implements OnInit {
+export class CreateUserComponent implements OnInit {
 
   public form: FormGroup;
 
@@ -16,6 +16,7 @@ export class CreateStudentComponent implements OnInit {
     this.form = new FormGroup({
       username: new FormControl('', Validators.required),
       name: new FormControl('', Validators.required),
+      userType: new FormControl('', Validators.required),
       courses: new FormControl([]),
     });
   }
