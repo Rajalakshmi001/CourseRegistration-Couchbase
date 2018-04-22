@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { HttpModule, Http } from '@angular/http';
 import { CreateOfferingComponent } from './components/create-offering/create-offering.component';
 import { MatSelectModule } from '@angular/material/select';
+import { CreateStudentComponent } from './components/create-student/create-student.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
     UserPageComponent,
     CreateCourseComponent,
     CreateOfferingComponent,
+    CreateStudentComponent,
   ],
   imports: [
     BrowserModule,

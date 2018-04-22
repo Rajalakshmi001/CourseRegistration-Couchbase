@@ -27,3 +27,9 @@ $course-registrartion-theme: mat-light-theme($course-registrartion-primary, $cou
 body {
     margin: 0;
 }
+mat-card {
+    margin: 16px;
+    .full-width-input {
+        width: 100%;
+    }
+}

@@ -3,6 +3,7 @@ import { CreateCourseComponent } from './components/create-course/create-course.
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserPageComponent } from './components/user-page/user-page.component';
+import { CreateStudentComponent } from './components/create-student/create-student.component';
 
 const routes: Routes = [{
   path: 'user',
@@ -15,6 +16,10 @@ const routes: Routes = [{
 {
   path: 'create-offering',
   component: CreateOfferingComponent,
+},
+{
+  path: 'create-student',
+  component: CreateStudentComponent,
 }];
 
 @NgModule({
