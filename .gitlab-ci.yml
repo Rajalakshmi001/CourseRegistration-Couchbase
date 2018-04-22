@@ -2,6 +2,7 @@ stages:
 - deploy
 - restart
 - test
+- rollback
 
 before_script: 
 - rm -f /tmp/privkey
@@ -23,3 +24,9 @@ run_tests:
     script:
     - chmod +x testing/flaskTests.sh
     - ./testing/flaskTests.sh
+    
+rollback_to_prev:
+    stage: rollback
+    script:
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git reset --hard master@{1}"
+    when: on_failure
