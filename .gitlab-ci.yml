@@ -2,6 +2,7 @@ stages:
 - deploy
 - restart
 - test
+- save_commit
 - rollback
 - test
 
@@ -32,11 +33,19 @@ run_tests:
     when: on_success
     tags: 
     - ubuntu
+
+save_good_commit_hash:
+    stage: save_commit
+    script: 
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "echo ${CI_COMMIT_SHA} > lastWorkingCommit"
+    when: on_success
+    tags: 
+    - ubuntu
     
 rollback_to_prev:
     stage: rollback
     script:
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git reset --hard master@{1}"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "./revertToPrev.sh"
     when: on_failure
     tags: 
     - ubuntu
