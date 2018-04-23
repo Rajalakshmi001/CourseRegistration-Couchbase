@@ -21,7 +21,7 @@ push_to_server:
 restart_server:
     stage: restart
     script: 
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "sudo systemctl restart FlaskService.service && sleep 1 && /bin/bash getFlaskPID.sh"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "./restartFlaskServer.sh"
     tags: 
     - ubuntu
     
@@ -45,7 +45,7 @@ save_good_commit_hash:
 rollback_to_prev:
     stage: rollback
     script:
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "./revertToPrev.sh"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "./revertToPrev.sh && ./restartFlaskServer.sh"
     when: on_failure
     tags: 
     - ubuntu
