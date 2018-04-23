@@ -20,7 +20,7 @@ push_to_server:
 restart_server:
     stage: restart
     script: 
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "sudo systemctl restart FlaskService.service && sleep 1 && /bin/bash getFlask.sh"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "sudo systemctl restart FlaskService.service && sleep 1 && /bin/bash getFlaskPID.sh"
     tags: 
     - ubuntu
     
