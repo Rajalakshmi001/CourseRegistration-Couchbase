@@ -10,9 +10,9 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://www.google.com/design/spec/style/color.html
 $course-registrartion-primary: mat-palette($mat-indigo);
-$course-registrartion-accent : mat-palette($mat-pink, A200, A100, A400);
+$course-registrartion-accent: mat-palette($mat-pink, A200, A100, A400);
 // The warn palette is optional (defaults to red).
-$course-registrartion-warn : mat-palette($mat-red);
+$course-registrartion-warn: mat-palette($mat-red);
 // Create the theme object (a Sass map containing all of the palettes).
 $course-registrartion-theme: mat-light-theme($course-registrartion-primary, $course-registrartion-accent, $course-registrartion-warn);
 // Include theme styles for core and each component used in your app.
@@ -23,10 +23,20 @@ body {
   margin: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 mat-card {
   margin: 16px;
   .full-width-input {
     width: 100%;
+  }
+}
+
+mat-form-field {
+  @media(max-width: 650px) {
+    max-width: 49%;
   }
 }
 
