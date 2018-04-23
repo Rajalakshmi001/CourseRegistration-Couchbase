@@ -1,50 +1,61 @@
 <mat-card>
-    <mat-card-header>
-        <mat-card-title>Create A New Course Offering</mat-card-title>
-    </mat-card-header>
+  <mat-card-header>
+    <mat-card-title>Create A New Course Offering</mat-card-title>
+  </mat-card-header>
 
-    <mat-card-content>
-        <form [formGroup]="form">
-            <mat-form-field>
-                <mat-select placeholder="Select Course" formControlName="course" class="full-width-input">
-                    <mat-option *ngFor="let course of courses" [value]="course.value">
-                        {{course.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-select placeholder="Select Quarter" formControlName="quarter" class="full-width-input">
-                    <mat-option *ngFor="let quarter of quarters" [value]="quarter.value">
-                        {{quarter.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-select placeholder="Select Year" formControlName="year" class="full-width-input">
-                    <mat-option *ngFor="let year of years" [value]="year">
-                        {{year}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-select placeholder="Select Professor" formControlName="professor" class="full-width-input">
-                    <mat-option *ngFor="let prof of professors" [value]="prof.value">
-                        {{prof.name}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field class="full-width-input">
-                <input type="number" matInput placeholder="Capacity" formControlName="capacity">
-            </mat-form-field>
-            <mat-form-field>
-                <mat-select placeholder="Select Hour" formControlName="hour" class="full-width-input">
-                    <mat-option *ngFor="let h of hours" [value]="h">
-                        {{h}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <br/>
-            <button mat-button [disabled]="form.invalid" color="primary" (click)="createOffering()">Create</button>
-        </form>
-    </mat-card-content>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <div>
+        <mat-form-field>
+          <mat-select placeholder="Select Course" formControlName="course">
+            <mat-option *ngFor="let course of courses" [value]="course.value">
+              {{course.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Select Professor" formControlName="professor">
+            <mat-option *ngFor="let prof of professors" [value]="prof.value">
+              {{prof.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <mat-select placeholder="Select Quarter" formControlName="quarter">
+            <mat-option *ngFor="let quarter of quarters" [value]="quarter.value">
+              {{quarter.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Select Year" formControlName="year">
+            <mat-option *ngFor="let year of years" [value]="year">
+              {{year}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Select Hour" formControlName="hour">
+            <mat-option *ngFor="let h of hours" [value]="h">
+              {{h}} hour
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <input type="number" matInput placeholder="Capacity" formControlName="capacity">
+        </mat-form-field>
+      </div>
+
+      <button mat-button [disabled]="form.invalid" color="primary" (click)="createOffering()">Create</button>
+    </form>
+  </mat-card-content>
 </mat-card>

@@ -1,0 +1,22 @@
+.app-container {
+  position: absolute;
+  top: 64px;
+  @media (max-width: 600px) {
+    top: 56px;
+  }
+  bottom: 0;
+  left: 0;
+  right: 0;
+  mat-drawer {
+    min-width: 200px;
+    a {
+      color: #ddd;
+      text-align: center;
+    }
+    background-color: #444;
+  }
+}
+
+.mat-icon-button {
+  margin-right: 8px;
+}

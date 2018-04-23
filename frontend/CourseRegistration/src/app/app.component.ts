@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { DeviceService } from './services/device/device.service';
 
 @Component({
   selector: 'app-root',
@@ -6,9 +7,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app';
 
-  constructor() {
-    
+  public sidebarOpen = false;
+  public isMobile: boolean;
+
+  constructor(public device: DeviceService) {
+    this.isMobile = this.device.isMobile;
+  }
+
+  @HostListener('window:resize', ['$event'])
+    onResize(event) {
+      this.isMobile = this.device.isMobile;
+    }
+
+  public toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 }
