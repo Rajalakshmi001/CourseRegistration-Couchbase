@@ -9,7 +9,7 @@ app = Flask(__name__)
 @app.route('/')
 @crossdomain(origin='*', methods=['GET'], headers=['content-type'])
 def hello():
-    return 'root'
+    return 'root_FAIL'
 
 @app.route('/user', methods=['GET'])
 @app.route('/user/<userId>', methods=['GET'])
