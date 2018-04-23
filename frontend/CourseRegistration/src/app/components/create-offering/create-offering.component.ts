@@ -1,5 +1,5 @@
 import { OnInit, Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 
 @Component({
     selector: 'app-create-offering',
@@ -12,6 +12,7 @@ export class CreateOfferingComponent implements OnInit {
     public professors: { name: string, value: string }[];
     public courses: { name: string, value: string }[];
     public quarters: { name: string, value: string }[];
+    public days: { name: string, value: number }[];
     public years: number[];
     public hours: number[];
 
@@ -24,6 +25,7 @@ export class CreateOfferingComponent implements OnInit {
             quarter: new FormControl('', Validators.required),
             year: new FormControl('', Validators.required),
             hour: new FormControl('', Validators.required),
+            days: new FormControl([], Validators.required),
             capacity: new FormControl(0, Validators.min(0)),
             enrolled: new FormControl(0)
         });
@@ -44,6 +46,14 @@ export class CreateOfferingComponent implements OnInit {
 
         this.courses = [
             { name: 'CSSE 433', value: 'c1' }
+        ];
+
+        this.days = [
+            { name: 'Monday', value: 0},
+            { name: 'Tuesday', value: 1},
+            { name: 'Wednesday', value: 2},
+            { name: 'Thursday', value: 3},
+            { name: 'Friday', value: 4},
         ];
 
         this.hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

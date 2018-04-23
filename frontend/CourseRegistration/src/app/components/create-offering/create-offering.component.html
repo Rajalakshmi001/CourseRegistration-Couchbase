@@ -47,6 +47,14 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Select Days" formControlName="days" multiple>
+            <mat-option *ngFor="let d of days" [value]="d.value">
+              {{d.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
 
       <div>
