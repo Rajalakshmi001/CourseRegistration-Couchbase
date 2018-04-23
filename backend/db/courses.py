@@ -4,6 +4,7 @@ from utils import catch404
 
 course_bucket = cluster.open_bucket('courses')
 
+
 @catch404
 def course_main(courseId):
     method_map = {"GET": courseGet, "PUT": coursePut, "POST": coursePost, "DELETE": courseDelete}
@@ -25,14 +26,19 @@ def coursePut(courseId):
     data = request.get_json()
     if not data:
         return make_response("No data supplied", 400)
-    opres = course_bucket.upsert(courseId, request.get_json())  # type: OperationResult
-    print(opres, opres.success, opres.value)
-    return make_response('Document inserted/updated', 200)
-    # return Response(response=json.dumps(request.get_json()), status=200, mimetype='application/json')
+    try:
+        course_bucket.insert(courseId, request.get_json())  # type: OperationResult
+        return make_response('Document ' + courseId + ' inserted', 200)
+    except KeyExistsError:
+        return make_response('Document ' + courseId + ' already existed', 400)
 
 
 def coursePost(courseId):
-    pass
+    data = request.get_json()
+    if not data:
+        return make_response("No data supplied", 400)
+    opres = course_bucket.replace(courseId, request.get_json())
+    return make_response('Document updated', 200)
 
 
 def courseDelete(courseId):

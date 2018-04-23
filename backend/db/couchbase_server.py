@@ -1,6 +1,6 @@
 from couchbase.cluster import Cluster
 from couchbase.cluster import PasswordAuthenticator
-from couchbase.exceptions import NotFoundError
+from couchbase.exceptions import NotFoundError, KeyExistsError
 from couchbase.result import OperationResult, ValueResult
 cluster = Cluster('couchbase://137.112.89.94:8091')
 __authenticator = PasswordAuthenticator('admin2', 'An3WeeWa')
