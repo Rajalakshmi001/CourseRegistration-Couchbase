@@ -78,4 +78,5 @@ def generateSchedules():
 
 
 if __name__ == '__main__':
+    print("You are running flaskServer.py directly; it will probably fail")
     app.run(host='0.0.0.0', port=5005)
