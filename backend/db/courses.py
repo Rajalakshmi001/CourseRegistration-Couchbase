@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
-from utils import catch404
+from utils import catch404, require_json_data
 
 course_bucket = cluster.open_bucket('courses')
 
@@ -22,10 +22,9 @@ def courseGet(courseId):
     return Response(response=json.dumps(cb_data.value), status=200, mimetype='application/json')
 
 
+@require_json_data
 def coursePut(courseId):
     data = request.get_json()
-    if not data:
-        return make_response("No data supplied", 400)
     try:
         course_bucket.insert(courseId, request.get_json())  # type: OperationResult
         return make_response('Document ' + courseId + ' inserted', 200)
@@ -33,15 +32,13 @@ def coursePut(courseId):
         return make_response('Document ' + courseId + ' already existed', 400)
 
 
+@require_json_data
 def coursePost(courseId):
     data = request.get_json()
-    if not data:
-        return make_response("No data supplied", 400)
-    opres = course_bucket.replace(courseId, request.get_json())
-    return make_response('Document updated', 200)
+    opres = course_bucket.replace(courseId, request.get_json())  # type: OperationResult
+    return make_response('Document updated: ' + opres.success, 200)
 
 
 def courseDelete(courseId):
     del_res = course_bucket.remove(courseId)  # type: OperationResult
-    print(del_res.value)
-    return make_response('Deletion value {}, success {}'.format(del_res.value, del_res.success))
+    return make_response("Successfully deleted" if del_res.success else "Delete failed")
