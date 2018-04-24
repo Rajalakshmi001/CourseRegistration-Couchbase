@@ -12,10 +12,6 @@ import { Input } from '@angular/core';
 export class CreateCourseComponent implements OnInit {
 
   public form: FormGroup;
-  public text = {
-    name: 'Bill',
-    display: false,
-  };
 
   constructor(public http: Http) { }
 

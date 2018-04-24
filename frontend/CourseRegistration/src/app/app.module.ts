@@ -18,6 +18,10 @@ import { RegisterComponent, FilterPipe } from './components/register/register.co
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { LookupComponent } from './components/lookup/lookup.component';
 import { MatTableModule } from '@angular/material/table';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { DeviceService } from './services/device/device.service';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -31,7 +35,7 @@ import { MatTableModule } from '@angular/material/table';
     LookupComponent,
   ],
   imports: [
-    BrowserModule,
+  BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -43,8 +47,11 @@ import { MatTableModule } from '@angular/material/table';
     MatSelectModule,
     MatAutocompleteModule,
     MatTableModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
   ],
-  providers: [],
+  providers: [DeviceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
