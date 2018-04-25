@@ -5,7 +5,6 @@ from utils import catch404, require_json_data, catch_already_exists
 user_bucket = cluster.open_bucket('users')
 
 
-
 def user_main(userId):
     method_map = {"GET": userGet, "PUT": userPut, "POST": userPost, "DELETE": userDelete}
     print(request.method, userId)
@@ -18,6 +17,10 @@ def user_main(userId):
 
 
 def userGet(userId):
+    if not userId:
+        # return all users
+        return Response(response=json.dumps(list(user_bucket.n1ql_query('select username,name from users'))), status=200, mimetype='application/json')
+
     ub_data = user_bucket.get(userId)  # type: ValueResult
     return Response(response=json.dumps(ub_data.value), status=200, mimetype='application/json')
     
