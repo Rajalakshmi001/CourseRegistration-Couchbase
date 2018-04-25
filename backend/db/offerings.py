@@ -21,8 +21,8 @@ def offeringGet(quarterId, courseId, sectionId):
     return Response(response=json.dumps(ob_data.value), status=200, mimetype='application/json')
 
 
-@require_json_data
 @catch_already_exists
+@require_json_data
 def offeringPut(quarterId, courseId, sectionId):
     offering_bucket.mutate_in(quarterId, subdoc.insert(courseId+"."+sectionId, request.get_json(), create_parents=True))
     return make_response("Created offering {}/{}-{}".format(quarterId, courseId, sectionId), 200)

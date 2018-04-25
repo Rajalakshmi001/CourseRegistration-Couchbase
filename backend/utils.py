@@ -21,7 +21,8 @@ def catch_already_exists(function):
         except KeyExistsError as kee:
             kee.key
             return make_response('{} already existed; not modified'.format(kee.key), 304)
-    return
+    
+    return wrapper
 
 
 def require_json_data(function):
