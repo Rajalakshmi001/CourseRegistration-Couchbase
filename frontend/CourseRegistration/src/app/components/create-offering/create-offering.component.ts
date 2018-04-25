@@ -1,5 +1,11 @@
+import { Http } from '@angular/http';
+import { Offering } from './../../models/offering.model';
 import { OnInit, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { DatabaseService } from '../../services/database/database.service';
+import { NotificationService } from '../../services/notification/notification.service';
+import { environment } from '../../../environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-create-offering',
@@ -9,25 +15,30 @@ import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 export class CreateOfferingComponent implements OnInit {
 
     public form: FormGroup;
-    public professors: { name: string, value: string }[];
-    public courses: { name: string, value: string }[];
-    public quarters: { name: string, value: string }[];
-    public days: { name: string, value: number }[];
+    public professors: { name: String, value: String }[];
+    public courses: { name: String, value: String }[];
+    public quarters: { name: String, value: String }[];
+    public days: { name: String, value: number }[];
     public years: number[];
     public hours: number[];
 
-    constructor() { }
+    constructor(private http: Http,
+        private db: DatabaseService,
+        private notificationService: NotificationService,
+        private snackbar: MatSnackBar) { }
 
     ngOnInit() {
+        this.getCourses();
         this.form = new FormGroup({
-            professor: new FormControl('', Validators.required),
-            course: new FormControl('', Validators.required),
+            prof: new FormControl('', Validators.required),
+            courseNum: new FormControl('', Validators.required),
             quarter: new FormControl('', Validators.required),
             year: new FormControl('', Validators.required),
             hour: new FormControl('', Validators.required),
             days: new FormControl([], Validators.required),
             capacity: new FormControl(0, Validators.min(0)),
-            enrolled: new FormControl(0)
+            enrolled: new FormControl(0),
+            offeringId: new FormControl(0),
         });
 
         this.professors = [
@@ -44,22 +55,49 @@ export class CreateOfferingComponent implements OnInit {
 
         this.years = [2017, 2018, 2019, 2020];
 
-        this.courses = [
-            { name: 'CSSE 433', value: 'c1' }
-        ];
+        this.courses = [];
 
         this.days = [
-            { name: 'Monday', value: 0},
-            { name: 'Tuesday', value: 1},
-            { name: 'Wednesday', value: 2},
-            { name: 'Thursday', value: 3},
-            { name: 'Friday', value: 4},
+            { name: 'Monday', value: 0 },
+            { name: 'Tuesday', value: 1 },
+            { name: 'Wednesday', value: 2 },
+            { name: 'Thursday', value: 3 },
+            { name: 'Friday', value: 4 },
         ];
 
         this.hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     }
 
+    getCourses() {
+        this.db.getCourses().then(courses => {
+            this.courses = courses.map(val => {
+                return { name: val.name, value: val.courseNum };
+            });
+        });
+    }
+
     createOffering() {
-        console.log(this.form.value);
+        const data = this.form.value;
+        const offering: Offering = {
+            courseNum: data.courseNum,
+            enrolled: data.enrolled,
+            capacity: data.capacity,
+            hour: data.hour,
+            days: data.days,
+            prof: data.prof,
+            quarter: data.quarter + data.year,
+            offeringId: data.offeringId,
+        };
+        console.log(offering);
+        this.http.put(`${environment.flaskRoot}/offering/${offering.quarter}/${offering.courseNum}/${offering.offeringId}`,
+            offering).subscribe(resp => {
+                if (resp.status === 200) {
+                    this.snackbar.open('Offering Created!', 'OK', { duration: 2000 });
+                    this.form.reset();
+                }
+            }, err => {
+                console.error(err);
+                this.snackbar.open('Failed to create offering :(', 'OK', { duration: 2000 });
+            });
     }
 }

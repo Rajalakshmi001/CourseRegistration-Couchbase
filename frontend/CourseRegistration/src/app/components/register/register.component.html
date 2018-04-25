@@ -27,10 +27,10 @@
       </mat-autocomplete>
 
       <mat-form-field>
-        <input type="text" matInput formControlName="courseId" placeholder="Select Course Number" [matAutocomplete]="courseAuto">
+        <input type="text" matInput formControlName="courseNum" placeholder="Select Course Number" [matAutocomplete]="courseAuto">
       </mat-form-field>
       <mat-autocomplete #courseAuto="matAutocomplete">
-        <mat-option *ngFor="let course of (courses | filterPipe:form.get('courseId').value)" [value]="course">
+        <mat-option *ngFor="let course of (courses | filterPipe:form.get('courseNum').value)" [value]="course">
           {{ course }}
         </mat-option>
       </mat-autocomplete>
@@ -49,6 +49,15 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Select Section Id" formControlName="offeringId" class="full-width-input" [disabled] = "offerings.length === 0">
+          <mat-option *ngFor="let offering of offerings" [value]="offering">
+            {{offering}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <br/>
       <button mat-button [disabled]="form.invalid" color="primary" (click)="register()">Create</button>
     </form>
