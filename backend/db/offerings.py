@@ -19,8 +19,7 @@ def offering_main(quarterId, courseId, sectionId):
 
 
 def offeringGet(quarterId, courseId, sectionId):
-    ob_data = offering_bucket.lookup_in(quarterId, subdoc.get(courseId+("."+sectionId if int(sectionId) else "")))  # type: SubdocResult
-    
+    ob_data = offering_bucket.lookup_in(quarterId, subdoc.get(courseId+("" if not sectionId else '.'+sectionId)))  # type: SubdocResult
     return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
 
 
