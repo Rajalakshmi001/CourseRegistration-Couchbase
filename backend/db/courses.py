@@ -20,7 +20,7 @@ def course_main(courseId):
 def courseGet(courseId):
     if not courseId:
         # return all courseId
-        return Response(response=json.dumps(list(course_bucket.n1ql_query('select * from courses'))), status=200, mimetype='application/json')
+        return Response(response=json.dumps(list(course['courses'] for course in course_bucket.n1ql_query('select * from courses'))), status=200, mimetype='application/json')
 
     cb_data = course_bucket.get(courseId)  # type: ValueResult
     return Response(response=json.dumps(cb_data.value), status=200, mimetype='application/json')
