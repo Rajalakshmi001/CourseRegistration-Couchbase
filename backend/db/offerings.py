@@ -3,6 +3,7 @@ from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
 from couchbase.result import SubdocResult
 from utils import catch404, require_json_data, catch_already_exists
+from db.quarters import quarterPut as upsert_quarter
 
 offering_bucket = cluster.open_bucket('offerings')
 
@@ -25,10 +26,7 @@ def offeringGet(quarterId, courseId, sectionId):
 
 @require_json_data
 def offeringPut(quarterId, courseId, sectionId):
-    @catch_already_exists
-    def mquarter():
-        offering_bucket.insert(quarterId, {})
-    mquarter()
+    upsert_quarter(quarterId)
 
     offering_bucket.mutate_in(quarterId, subdoc.insert(courseId+"."+sectionId, request.get_json(), create_parents=True))
     return make_response("Created offering {}/{}-{}".format(quarterId, courseId, sectionId), 200)
