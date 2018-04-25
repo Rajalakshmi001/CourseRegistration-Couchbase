@@ -5,13 +5,15 @@ from utils import catch404, require_json_data, catch_already_exists
 user_bucket = cluster.open_bucket('users')
 
 
-@catch404
+
 def user_main(userId):
     method_map = {"GET": userGet, "PUT": userPut, "POST": userPost, "DELETE": userDelete}
     print(request.method, userId)
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for users".format(request.method))
-    
+
+    print(request.get_json())
+
     return method_map[request.method](userId)
 
 
