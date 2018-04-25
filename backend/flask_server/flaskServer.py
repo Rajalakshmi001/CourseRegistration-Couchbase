@@ -12,6 +12,7 @@ def hello():
     return 'root'
 
 @app.route('/user', methods=['GET'])
+@app.route('/user', methods=['OPTIONS'])
 @app.route('/user/<userId>', methods=['GET'])
 @app.route('/user/<userId>', methods=['PUT'])
 @app.route('/user/<userId>', methods=['POST'])
@@ -19,6 +20,7 @@ def hello():
 @app.route('/user/<userId>', methods=['OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 def user(userId=None):
+    print("User:", userId)
     return users.user_main(userId)
 
 
@@ -33,6 +35,7 @@ def course(courseId=None):
     return courses.course_main(courseId)
 
 
+@app.route('/offering/<quarterId>/<courseId>', methods=['GET'])
 @app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['GET'])
 @app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['PUT'])
 @app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['POST'])
