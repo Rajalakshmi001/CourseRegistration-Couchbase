@@ -22,6 +22,7 @@ def user(userId=None):
     return users.user_main(userId)
 
 
+@app.route('/course', methods=['GET'])
 @app.route('/course/<courseId>', methods=['GET'])
 @app.route('/course/<courseId>', methods=['PUT'])
 @app.route('/course/<courseId>', methods=['POST'])
