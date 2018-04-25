@@ -1,26 +1,40 @@
-from flask import Flask, request, Response, json
+from flask import Flask, request, Response, json, make_response
+from db.couchbase_server import *
+import couchbase.subdocument as subdoc 
+from couchbase.result import SubdocResult
+from utils import catch404, require_json_data, catch_already_exists
+from db.quarters import quarterPut as upsert_quarter
+
+offering_bucket = cluster.open_bucket('offerings')
 
 
-def offering_main(offeringId):
+@catch404
+def offering_main(quarterId, courseId, sectionId):
     method_map = {"GET": offeringGet, "PUT": offeringPut, "POST": offeringPost, "DELETE": offeringDelete}
-    print(request.method, offeringId)
+    print(request.method, quarterId, courseId, sectionId)
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for offerings".format(request.method))
     
-    return method_map[request.method](offeringId)
+    return method_map[request.method](quarterId, courseId, sectionId)
 
 
-def offeringGet(offeringId):
-    return "You requested offering '{}', but this endpoint is not actually implemented yet".format(offeringId)
+def offeringGet(quarterId, courseId, sectionId):
+    ob_data = offering_bucket.lookup_in(quarterId, subdoc.get(courseId+("" if not sectionId else '.'+sectionId)))  # type: SubdocResult
+    return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
 
 
-def offeringPut(offeringId):
-    return Response(response=json.dumps(request.get_json()), status=200, mimetype='application/json')
+@require_json_data
+def offeringPut(quarterId, courseId, sectionId):
+    upsert_quarter(quarterId)
+
+    offering_bucket.mutate_in(quarterId, subdoc.insert(courseId+"."+sectionId, request.get_json(), create_parents=True))
+    return make_response("Created offering {}/{}-{}".format(quarterId, courseId, sectionId), 200)
 
 
-def offeringPost(offeringId):
-    pass
+def offeringPost(quarterId, courseId, sectionId):
+    offering_bucket.mutate_in(quarterId, subdoc.replace(courseId+"."+sectionId, request.get_json()))
+    return make_response("Updated offering {}/{}-{}".format(quarterId, courseId, sectionId), 200)
 
 
-def offeringDelete(offeringId):
+def offeringDelete(quarterId, courseId, sectionId):
     pass
