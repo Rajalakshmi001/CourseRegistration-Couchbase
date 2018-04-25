@@ -1,6 +1,6 @@
 import functools
 from flask import make_response, request
-from couchbase.exceptions import NotFoundError, KeyExistsError
+from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError
 
 def catch404(function):
     @functools.wraps(function)
