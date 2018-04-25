@@ -1,8 +1,11 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from './../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Http } from '@angular/http';
 import { HttpClient } from 'selenium-webdriver/http';
 import { Input } from '@angular/core';
+import { Course } from '../../models/course.model';
 
 @Component({
   selector: 'app-create-course',
@@ -13,26 +16,26 @@ export class CreateCourseComponent implements OnInit {
 
   public form: FormGroup;
 
-  constructor(public http: Http) { }
+  constructor(public http: Http, private snackbar: MatSnackBar) { }
 
   ngOnInit() {
     this.form = new FormGroup({
       name: new FormControl('', Validators.required),
-      courseNumber: new FormControl('', Validators.required),
+      courseNum: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required),
-    });
-
-    this.http.get('http://137.112.89.91:5005/').subscribe(data => {
-      console.log(data);
     });
   }
 
   public createCourse() {
-    this.http.put('http://137.112.89.91:5005/course/1', {
-      someData: 'my string',
-      otherVar: 5
-    }).subscribe(data => {
-      console.log(data);
+    const data: Course = this.form.value;
+    this.http.put(`${environment.flaskRoot}/course/${data.courseNum}`, data).subscribe(resp => {
+      console.log(resp);
+      if (resp.status === 200) {
+        this.snackbar.open('Course Created!', 'OK', { duration: 2000 });
+        this.form.reset();
+      }
+    }, err => {
+      this.snackbar.open('Failed to create course :(', 'OK', { duration: 2000 });
     });
   }
 

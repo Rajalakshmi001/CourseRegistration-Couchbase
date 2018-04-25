@@ -9,12 +9,12 @@
         <input matInput placeholder="Course Name" formControlName="name">
       </mat-form-field>
       <mat-form-field class="full-width-input">
-        <input matInput placeholder="Course Number" formControlName="courseNumber">
+        <input matInput placeholder="Course Number" formControlName="courseNum">
       </mat-form-field>
       <mat-form-field class="full-width-input">
         <input matInput placeholder="Description" formControlName="description">
       </mat-form-field>
+      <button mat-button [disabled]="!form.valid" (click)="createCourse()" type="submit">Create</button>
     </form>
-    <button mat-button [disabled]="!form.valid" (click)="createCourse()">Create</button>
   </mat-card-content>
 </mat-card>

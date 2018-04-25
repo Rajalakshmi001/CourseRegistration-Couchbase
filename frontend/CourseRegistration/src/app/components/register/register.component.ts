@@ -1,6 +1,10 @@
+import { NotificationService } from './../../services/notification/notification.service';
+import { environment } from './../../../environments/environment';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
+import { Http } from '@angular/http';
+import { Course } from '../../models/course.model';
 
 @Component({
   selector: 'app-register',
@@ -10,14 +14,15 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class RegisterComponent implements OnInit {
 
   public form: FormGroup;
-  public students: string[];
-  public courses: string[];
+  public students: String[];
+  public courses: String[];
   public years: number[];
-  public quarters: { name: string, value: string }[];
+  public quarters: { name: String, value: String }[];
 
-  constructor() { }
+  constructor(private http: Http, private notificationService: NotificationService) { }
 
   ngOnInit() {
+    this.getCourses();
     this.form = new FormGroup({
       studentId: new FormControl('', Validators.required),
       courseId: new FormControl('', Validators.required),
@@ -31,10 +36,7 @@ export class RegisterComponent implements OnInit {
       'dverlaque',
     ];
 
-    this.courses = [
-      'CSSE433',
-      'CSSE333',
-    ];
+    this.courses = [ ];
 
     this.quarters = [
       { name: 'Spring', value: 'spring' },
@@ -48,6 +50,19 @@ export class RegisterComponent implements OnInit {
 
   register() {
     console.log(this.form.value);
+  }
+
+  public getCourses() {
+    this.http.get(`${environment.flaskRoot}/course`).subscribe(resp => {
+      console.log(resp);
+      if (resp.status === 200) {
+        const data: Course[] = JSON.parse(resp['_body']);
+        console.log(data);
+        this.courses = data.map(val => val.courseNum);
+      }
+    }, err => {
+      this.notificationService.networkError();
+    });
   }
 }
 
