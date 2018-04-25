@@ -11,6 +11,16 @@ __authenticator = PasswordAuthenticator('admin2', 'An3WeeWa')
 cluster.authenticate(__authenticator)
 
 adm = Admin('admin', 'An3WeeWa', host=SERVER_IP, port=8091)
+
+
+def __set_up_couchbase():
+    if input("Enter 'confirm' to confirm couchbase setup: ") != 'confirm':
+        return
+
+    # for bucket in ['users', 'courses', 'schedules']
+    adm.bucket_create('users')
+
+
 if __name__ == '__main__':
     bckt = input("Enter bucket name to create: ")
     if not bckt:

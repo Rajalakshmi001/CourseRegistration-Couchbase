@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
-from utils import catch404, require_json_data
+from utils import catch404, require_json_data, catch_already_exists
 
 course_bucket = cluster.open_bucket('courses')
 
@@ -23,13 +23,11 @@ def courseGet(courseId):
 
 
 @require_json_data
+@catch_already_exists
 def coursePut(courseId):
     data = request.get_json()
-    try:
-        course_bucket.insert(courseId, request.get_json())  # type: OperationResult
-        return make_response('Document ' + courseId + ' inserted', 200)
-    except KeyExistsError:
-        return make_response('Document ' + courseId + ' already existed', 400)
+    course_bucket.insert(courseId, request.get_json())  # type: OperationResult
+    return make_response('Document ' + courseId + ' inserted', 200)
 
 
 @require_json_data

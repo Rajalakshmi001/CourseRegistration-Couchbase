@@ -1,6 +1,6 @@
 import functools
 from flask import make_response, request
-from couchbase.exceptions import NotFoundError
+from couchbase.exceptions import NotFoundError, KeyExistsError
 
 def catch404(function):
     @functools.wraps(function)
@@ -11,6 +11,17 @@ def catch404(function):
             return make_response("for {} {}, {} not found".format(request.method, function.__name__, nfe.key), 404)
     
     return wrapper
+
+
+def catch_already_exists(function):
+    @functools.wraps(function)
+    def wrapper(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except KeyExistsError as kee:
+            kee.key
+            return make_response('{} already existed; not modified'.format(kee.key), 304)
+    return
 
 
 def require_json_data(function):

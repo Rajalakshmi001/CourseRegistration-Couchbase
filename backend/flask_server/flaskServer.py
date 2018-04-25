@@ -31,13 +31,13 @@ def course(courseId=None):
     return courses.course_main(courseId)
 
 
-@app.route('/offering/<offeringId>', methods=['GET'])
-@app.route('/offering/<offeringId>', methods=['PUT'])
-@app.route('/offering/<offeringId>', methods=['POST'])
-@app.route('/offering/<offeringId>', methods=['DELETE'])
+@app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['GET'])
+@app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['PUT'])
+@app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['POST'])
+@app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['DELETE'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
-def offering(offeringId=None):
-    return offerings.offering_main(offeringId)
+def offering(quarterId=None, courseId=None, sectionId=None):
+    return offerings.offering_main(quarterId, courseId, sectionId)
 
 
 @app.route('/professor/<professorId>', methods=['GET'])
