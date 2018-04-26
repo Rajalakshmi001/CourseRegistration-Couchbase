@@ -1,6 +1,10 @@
+import { DatabaseService } from './../../services/database/database.service';
+import { environment } from './../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { Http } from '@angular/http';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-lookup',
@@ -17,10 +21,11 @@ export class LookupComponent implements OnInit {
   public rawSchedule: any;
   public courseData: any;
 
-  constructor() {
+  constructor(private http: Http, private notificationService: NotificationService, private db: DatabaseService) {
   }
 
   ngOnInit() {
+    this.getStudents();
     this.form = new FormGroup({
       username: new FormControl('', Validators.required),
       year: new FormControl('', Validators.required),
@@ -72,7 +77,7 @@ export class LookupComponent implements OnInit {
 
     this.schedule = new MatTableDataSource(sched);
 
-    this.students = ['bill'];
+    this.students = [];
     this.years = [2017, 2018, 2019, 2020];
     this.quarters = [
       { name: 'Spring', value: 'spring' },
@@ -80,6 +85,12 @@ export class LookupComponent implements OnInit {
       { name: 'Fall', value: 'fall' },
       { name: 'Winter', value: 'winter' },
     ];
+  }
+
+  getStudents() {
+    this.db.getStudents().then(students => {
+      this.students = students.map(val => val.username);
+    });
   }
 
 }

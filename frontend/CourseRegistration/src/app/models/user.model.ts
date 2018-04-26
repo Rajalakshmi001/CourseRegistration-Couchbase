@@ -1,7 +1,8 @@
 import { CourseTaken } from './course.model';
 
 export interface User {
-    id?: String;
+    username?: String;
     name: String;
+    type: 'stud' | 'prof';
     courses: CourseTaken[];
 }

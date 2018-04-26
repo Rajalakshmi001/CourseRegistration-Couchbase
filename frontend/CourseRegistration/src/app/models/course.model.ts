@@ -1,4 +1,5 @@
 export interface Course {
+    courseNum: String;
     name: String;
     description: String;
 }

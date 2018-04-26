@@ -12,13 +12,13 @@
         <input matInput placeholder="Username" formControlName="username">
       </mat-form-field>
       <mat-form-field>
-        <mat-select placeholder="Student or Professor" formControlName="userType" class="full-width-input">
-          <mat-option value="student">Student</mat-option>
+        <mat-select placeholder="Student or Professor" formControlName="type" class="full-width-input">
+          <mat-option value="stud">Student</mat-option>
           <mat-option value="prof">Professor</mat-option>
         </mat-select>
+        <br/>
+        <button mat-button [disabled]="form.invalid" color="primary" (click)="createStudent()" type="submit">Create</button>
       </mat-form-field>
-      <br/>
-      <button mat-button [disabled]="form.invalid" color="primary" (click)="createStudent()">Create</button>
     </form>
   </mat-card-content>
 </mat-card>

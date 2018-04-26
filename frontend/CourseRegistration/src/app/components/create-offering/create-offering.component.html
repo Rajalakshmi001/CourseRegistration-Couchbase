@@ -7,7 +7,7 @@
     <form [formGroup]="form">
       <div>
         <mat-form-field>
-          <mat-select placeholder="Select Course" formControlName="course">
+          <mat-select placeholder="Select Course" formControlName="courseNum">
             <mat-option *ngFor="let course of courses" [value]="course.value">
               {{course.name}}
             </mat-option>
@@ -15,7 +15,7 @@
         </mat-form-field>
 
         <mat-form-field>
-          <mat-select placeholder="Select Professor" formControlName="professor">
+          <mat-select placeholder="Select Professor" formControlName="prof">
             <mat-option *ngFor="let prof of professors" [value]="prof.value">
               {{prof.name}}
             </mat-option>
@@ -60,6 +60,12 @@
       <div>
         <mat-form-field>
           <input type="number" matInput placeholder="Capacity" formControlName="capacity">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field>
+          <input type="number" matInput placeholder="Course Id" formControlName="offeringId" min="1">
         </mat-form-field>
       </div>
 

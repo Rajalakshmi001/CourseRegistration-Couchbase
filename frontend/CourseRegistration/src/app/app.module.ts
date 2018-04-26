@@ -1,3 +1,4 @@
+import { DatabaseService } from './services/database/database.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,7 +22,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { DeviceService } from './services/device/device.service';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { NotificationService } from './services/notification/notification.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,7 @@ import {MatIconModule} from '@angular/material/icon';
     LookupComponent,
   ],
   imports: [
-  BrowserModule,
+    BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -50,8 +53,9 @@ import {MatIconModule} from '@angular/material/icon';
     MatSidenavModule,
     MatListModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
-  providers: [DeviceService],
+  providers: [DeviceService, NotificationService, DatabaseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
