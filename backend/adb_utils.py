@@ -1,6 +1,7 @@
 import functools
-from flask import make_response, request
-from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError
+import json
+from flask import make_response, request, Response
+from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError, SubdocPathExistsError
 
 def catch404(function):
     @functools.wraps(function)
@@ -18,7 +19,7 @@ def catch_already_exists(function):
     def wrapper(*args, **kwargs):
         try:
             return function(*args, **kwargs)
-        except KeyExistsError as kee:
+        except (KeyExistsError, SubdocPathExistsError) as kee:
             kee.key
             return make_response('{} already existed; not modified'.format(kee.key), 304)
     
@@ -34,3 +35,6 @@ def require_json_data(function):
     
     return wrapper
     
+
+def json_response(data):
+    return Response(response=json.dumps(data), status=200, mimetype='application/json')

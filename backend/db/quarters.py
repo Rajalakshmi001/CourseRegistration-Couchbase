@@ -1,7 +1,7 @@
 from flask import Flask, request, Response, json
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
-from utils import catch404, require_json_data, catch_already_exists
+from adb_utils import catch404, require_json_data, catch_already_exists
 
 offering_bucket = cluster.open_bucket('offerings')
 

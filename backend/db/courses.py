@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, make_response
 import db.couchbase_server as cb
-from utils import catch404, require_json_data, catch_already_exists
+from adb_utils import catch404, require_json_data, catch_already_exists
 
 course_bucket = cb.cluster.open_bucket('courses')
 
