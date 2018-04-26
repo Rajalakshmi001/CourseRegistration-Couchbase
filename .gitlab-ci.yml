@@ -30,6 +30,7 @@ run_tests:
     script:
     - chmod +x testing/flaskTests.sh
     - ./testing/flaskTests.sh
+    - python3 --version
     when: on_success
     tags: 
     - ubuntu
