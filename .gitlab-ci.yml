@@ -27,7 +27,7 @@ restart_server:
 run_tests:
     stage: test
     script:
-    - pip3 install requests
+    - python3 -m pip install requests
     - chmod +x testing/flaskTests.sh
     - ./testing/flaskTests.sh
     - python3 testing/backendTests.py
