@@ -3,6 +3,7 @@ from couchbase.cluster import PasswordAuthenticator
 from couchbase.exceptions import NotFoundError, KeyExistsError
 from couchbase.result import OperationResult, ValueResult
 from couchbase.admin import Admin
+import couchbase.subdocument as subdoc 
 
 SERVER_IP = "137.112.89.94"
 
@@ -27,3 +28,11 @@ if __name__ == '__main__':
         exit(0)
     res = adm.bucket_create(bckt)
     print(res)
+
+
+"""
+n1ql:> CREATE PRIMARY INDEX username ON users
+CREATE PRIMARY INDEX courseNum ON courses
+
+
+"""
