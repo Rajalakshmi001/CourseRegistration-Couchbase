@@ -1,8 +1,8 @@
 from flask import Flask, request, Response, json, make_response
-from db.couchbase_server import *
+import db.couchbase_server as cb
 from utils import catch404, require_json_data, catch_already_exists
 
-course_bucket = cluster.open_bucket('courses')
+course_bucket = cb.cluster.open_bucket('courses')
 
 
 @catch404
@@ -31,14 +31,14 @@ def courseGet(courseId):
 def coursePut(courseId):
     data = request.get_json()
     course_bucket.insert(courseId, request.get_json())  # type: OperationResult
-    return make_response('Document ' + courseId + ' inserted', 200)
+    return make_response('Course ' + courseId + ' inserted', 201)
 
 
 @require_json_data
 def coursePost(courseId):
     data = request.get_json()
     opres = course_bucket.replace(courseId, request.get_json())  # type: OperationResult
-    return make_response('Document updated: ' + opres.success, 200)
+    return make_response('Course updated: ' + opres.success, 200)
 
 
 def courseDelete(courseId):
