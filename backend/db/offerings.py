@@ -1,7 +1,7 @@
 from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 from couchbase.result import SubdocResult
-from utils import catch404, require_json_data, catch_already_exists
+from adb_utils import catch404, require_json_data, catch_already_exists, json_response
 from db.quarters import quarterPut as upsert_quarter, quarterGet as get_for_quarter
 
 offering_bucket = cluster.open_bucket('offerings')
@@ -9,6 +9,7 @@ offering_bucket = cluster.open_bucket('offerings')
 
 @catch404
 def offering_main(quarterId, courseId, sectionId):
+    print("Offering main, url:", request.url)
     method_map = {"GET": offeringGet, "PUT": offeringPut, "POST": offeringPost, "DELETE": offeringDelete}
     print(request.method, quarterId, courseId, sectionId)
     if request.method not in method_map:
@@ -27,7 +28,8 @@ def offeringGet(quarterId, courseId, sectionId):
     return get_single_offering(quarterId, courseId, sectionId)
     
     ob_data = offering_bucket.lookup_in(quarterId, subdoc.get(courseId+("" if not sectionId else '.'+sectionId)))  # type: SubdocResult
-    return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
+    # return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
+    return list(ob_data[0])
 
 def all_offerings():
     # can I really do that? 
@@ -35,16 +37,18 @@ def all_offerings():
 
 def __offering_lookup_helper(qId, path):
     ob_data = offering_bucket.lookup_in(qId, subdoc.get(path))  # type: SubdocResult
-    return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
+    return ob_data[0]
+    # return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
 
 def get_course_sections(quarterId, courseId):
-    return __offering_lookup_helper(quarterId, courseId)
+    return json_response(list(__offering_lookup_helper(quarterId, courseId).values()))
 
 def get_single_offering(quarterId, courseId, sectionId):
-    return __offering_lookup_helper(quarterId, courseId+'.'+sectionId)
+    return json_response(__offering_lookup_helper(quarterId, courseId+'.'+sectionId))
 
 
 @require_json_data
+@catch_already_exists
 def offeringPut(quarterId, courseId, sectionId):
     upsert_quarter(quarterId)
     offering_bucket.mutate_in(quarterId, subdoc.insert(courseId+"."+sectionId, request.get_json(), create_parents=True))
