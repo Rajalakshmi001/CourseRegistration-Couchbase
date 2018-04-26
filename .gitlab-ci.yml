@@ -33,6 +33,7 @@ run_tests:
     when: on_success
     tags: 
     - ubuntu
+    - python
 
 save_good_commit_hash:
     stage: save_commit
