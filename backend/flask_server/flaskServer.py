@@ -20,7 +20,6 @@ def hello():
 @app.route('/user/<userId>', methods=['OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 def user(userId=None):
-    print("User:", userId)
     return users.user_main(userId)
 
 
