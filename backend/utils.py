@@ -7,8 +7,8 @@ def catch404(function):
     def wrapper(*args, **kwargs):
         try:
             return function(*args, **kwargs)
-        except NotFoundError as nfe:
-            return make_response("for {} {}, {} not found".format(request.method, function.__name__, nfe.key), 204)
+        except NotFoundError, SubdocPathNotFoundError as err:
+            return make_response("for {} {}, {} not found".format(request.method, function.__name__, err.key), 204)
     
     return wrapper
 
