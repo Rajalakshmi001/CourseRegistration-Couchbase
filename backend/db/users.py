@@ -1,8 +1,8 @@
 from flask import Flask, request, Response, json, make_response
-from db.couchbase_server import *
+import db.couchbase_server as cb
 from utils import catch404, require_json_data, catch_already_exists
 
-user_bucket = cluster.open_bucket('users')
+user_bucket = cb.cluster.open_bucket('users')
 
 
 @catch404
@@ -31,7 +31,7 @@ def userGet(userId):
 def userPut(userId):
     data = request.get_json()
     user_bucket.insert(userId, request.get_json())  # type: OperationResult
-    return make_response('User ' + userId + ' inserted', 200)
+    return make_response('User ' + userId + ' inserted', 201)
 
 
 def userPost(userId):
