@@ -1,7 +1,7 @@
 import requests
 import json
 from requests import Response
-url = "http://137.112.89.91:5005" if 1 else "http://localhost:5005" 
+url = "http://137.112.89.91:5005" if 0 else "http://localhost:5005" 
 uri = lambda x: url+x
 
 
@@ -44,6 +44,7 @@ def post(path, data):
 
 def test_all(sample_data: dict, sample_path: str, all_path=None, others_for_all=None, post_changes=None):
     sample_path = uri(sample_path)
+    others_for_all = others_for_all or []
     # delete
     delete(sample_path)
     # get should return null
@@ -55,11 +56,8 @@ def test_all(sample_data: dict, sample_path: str, all_path=None, others_for_all=
 
     if all_path:
         all_path = uri(all_path)
-        if others_for_all:
-            for other_path, other_data in others_for_all:
-                assert 200 <= put(uri(other_path), other_data) <= 304
-        else:
-            others_for_all = []
+        for other_path, other_data in others_for_all:
+            assert 200 <= put(uri(other_path), other_data) <= 304
         # get all should contain sample
         all_res = get_all(all_path)
         assert sample_data in all_res
@@ -76,7 +74,7 @@ def test_all(sample_data: dict, sample_path: str, all_path=None, others_for_all=
 
         assert get(sample_path) == updated
     else:
-        print("not testing post")
+        print("\nnot testing POST\n")
 
     # delete again
     delete(sample_path)

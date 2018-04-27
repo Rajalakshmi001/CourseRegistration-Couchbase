@@ -1,4 +1,4 @@
-from test_methods import test_all
+from test_methods import test_all, delete, uri
 
 
 def test_users():
@@ -29,8 +29,9 @@ def test_offerings():
     others = [["/offering/Summer2000/OTestCourse/02", 
                 dict(professor="SECOND_TEST_PROF", sectionId="02", courseId="OtestCourse", quarterId="Summer2000")]]
     test_all(test_offering_data, test_offering_path, "/offering/Summer2000/OTestCourse", others)
+    delete(uri('/quarter/Summer2000'))
 
 
-test_users()
-test_courses()
+# test_users()
+# test_courses()
 test_offerings()
