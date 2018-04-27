@@ -1,7 +1,7 @@
 from flask import Flask, request, Response, json
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
-from adb_utils import catch404, require_json_data, catch_already_exists
+from adb_utils import catch404, require_json_data, catch_already_exists, json_response
 
 offering_bucket = cluster.open_bucket('offerings')
 
@@ -9,7 +9,6 @@ offering_bucket = cluster.open_bucket('offerings')
 @catch404
 def quarter_main(quarterId):
     method_map = {"GET": quarterGet, "DELETE": quarterDelete}
-    print(request.method, quarterId)
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for quarters".format(request.method))
     
@@ -18,12 +17,11 @@ def quarter_main(quarterId):
 
 @catch_already_exists
 def quarterPut(quarterId):
-    offering_bucket.insert(quarterId, {})
+    offering_bucket.insert(quarterId, {})  # upsert would wipe
 
 
 def quarterGet(quarterId):
-    qb_data = offering_bucket.get(quarterId)  # type: ValueResult
-    return Response(response=json.dumps(qb_data.value), status=200, mimetype='application/json')
+    return json_response(offering_bucket.get(quarterId, silent=True)) 
 
 
 def quarterDelete(quarterId):

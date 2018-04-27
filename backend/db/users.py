@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, make_response
 import db.couchbase_server as cb
-from adb_utils import catch404, require_json_data, catch_already_exists
+from adb_utils import catch404, require_json_data, catch_already_exists, json_response
 
 user_bucket = cb.cluster.open_bucket('users')
 
@@ -8,7 +8,6 @@ user_bucket = cb.cluster.open_bucket('users')
 @catch404
 def user_main(userId):
     method_map = {"GET": userGet, "PUT": userPut, "POST": userPost, "DELETE": userDelete}
-    print(request.method, userId)
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for users".format(request.method))
 
@@ -20,10 +19,9 @@ def user_main(userId):
 def userGet(userId):
     if not userId:
         # return all users
-        return Response(response=json.dumps(list(user_bucket.n1ql_query('select username,name from users'))), status=200, mimetype='application/json')
-    print("Getting " + userId)
-    ub_data = user_bucket.get(userId)  # type: ValueResult
-    return Response(response=json.dumps(ub_data.value), status=200, mimetype='application/json')
+        return json_response(list(user_bucket.n1ql_query('select username,name from users')))
+    
+    return json_response(user_bucket.get(userId, quiet=True).value)  # type: ValueResult
     
 
 @require_json_data

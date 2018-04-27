@@ -1,5 +1,4 @@
-from couchbase.cluster import Cluster
-from couchbase.cluster import PasswordAuthenticator
+from couchbase.cluster import Cluster, PasswordAuthenticator
 from couchbase.exceptions import NotFoundError, KeyExistsError
 from couchbase.result import OperationResult, ValueResult
 from couchbase.admin import Admin
@@ -33,6 +32,6 @@ if __name__ == '__main__':
 """
 n1ql:> CREATE PRIMARY INDEX username ON users
 CREATE PRIMARY INDEX courseNum ON courses
-
+CREATE PRIMARY INDEX 
 
 """

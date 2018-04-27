@@ -36,5 +36,6 @@ def require_json_data(function):
     return wrapper
     
 
-def json_response(data):
-    return Response(response=json.dumps(data), status=200, mimetype='application/json')
+def json_response(data, code=200):
+    return Response(response=json.dumps(data), status=code, mimetype='application/json')
+

@@ -1,7 +1,7 @@
 import requests
 import json
 from requests import Response
-url = "http://137.112.89.91:5005"  # "http://localhost:5005" 
+url = "http://137.112.89.91:5005" if 1 else "http://localhost:5005" 
 uri = lambda x: url+x
 
 
@@ -22,8 +22,9 @@ def put(path, data):
 def get(path):
     print("---------------- GET")
     r = requests.get(path)  # type: Response
+    print(r.content)
     returned = r.json() if r.content else None
-    print(r.status_code, " GET returned:", returned)
+    print(r.status_code, "GET returned:", returned)
     return returned
 
 

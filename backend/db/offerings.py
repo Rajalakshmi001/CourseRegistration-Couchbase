@@ -1,6 +1,7 @@
 from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 from couchbase.result import SubdocResult
+import couchbase.subdocument as subdoc
 from adb_utils import catch404, require_json_data, catch_already_exists, json_response
 from db.quarters import quarterPut as upsert_quarter, quarterGet as get_for_quarter
 
@@ -9,9 +10,7 @@ offering_bucket = cluster.open_bucket('offerings')
 
 @catch404
 def offering_main(quarterId, courseId, sectionId):
-    print("Offering main, url:", request.url)
     method_map = {"GET": offeringGet, "PUT": offeringPut, "POST": offeringPost, "DELETE": offeringDelete}
-    print(request.method, quarterId, courseId, sectionId)
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for offerings".format(request.method))
     
@@ -27,12 +26,8 @@ def offeringGet(quarterId, courseId, sectionId):
         return get_course_sections(quarterId, courseId)
     return get_single_offering(quarterId, courseId, sectionId)
     
-    ob_data = offering_bucket.lookup_in(quarterId, subdoc.get(courseId+("" if not sectionId else '.'+sectionId)))  # type: SubdocResult
-    # return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
-    return list(ob_data[0])
 
 def all_offerings():
-    # can I really do that? 
     return None
 
 def __offering_lookup_helper(qId, path):
