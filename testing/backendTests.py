@@ -32,6 +32,6 @@ def test_offerings():
     delete(uri('/quarter/Summer2000'))
 
 
-# test_users()
-# test_courses()
+test_users()
+test_courses()
 test_offerings()

@@ -1,9 +1,12 @@
-import requests
-import json
+import requests, json, os
 from requests import Response
-url = "http://137.112.89.91:5005" if 0 else "http://localhost:5005" 
+
+
+DO_LOCAL = not os.getenv("CI")
+url = "http://localhost:5005"  if DO_LOCAL else "http://137.112.89.91:5005" 
 uri = lambda x: url+x
 
+print("DOING {} TESTS".format("LOCAL" if DO_LOCAL else "REMOTE"))
 
 def delete(path):
     print("--------------- DELETE")
@@ -22,7 +25,6 @@ def put(path, data):
 def get(path):
     print("---------------- GET")
     r = requests.get(path)  # type: Response
-    print(r.content)
     returned = r.json() if r.content else None
     print(r.status_code, "GET returned:", returned)
     return returned
