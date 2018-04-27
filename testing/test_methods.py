@@ -1,5 +1,6 @@
 import requests, json, os
 from requests import Response
+from time import sleep
 
 
 DO_LOCAL = not os.getenv("CI")
@@ -19,6 +20,7 @@ def put(path, data):
     print("---------------- PUT")
     r = requests.put(path, json=data)  # type: Response
     print(r.status_code, r.text)
+    sleep(1)
     return r.status_code
 
 
