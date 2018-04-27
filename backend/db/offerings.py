@@ -28,12 +28,11 @@ def offeringGet(quarterId, courseId, sectionId):
     
 
 def all_offerings():
-    return None
+    return json_response(list(quarter['offerings'] for quarter in offering_bucket.n1ql_query('select * from offerings'))) 
 
 def __offering_lookup_helper(qId, path):
     ob_data = offering_bucket.lookup_in(qId, subdoc.get(path))  # type: SubdocResult
     return ob_data[0]
-    # return Response(response=json.dumps(list(ob_data)[0]), status=200, mimetype='application/json')
 
 def get_course_sections(quarterId, courseId):
     return json_response(list(__offering_lookup_helper(quarterId, courseId).values()))
