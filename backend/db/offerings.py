@@ -2,7 +2,7 @@ from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 from couchbase.result import SubdocResult
 import couchbase.subdocument as subdoc
-from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
+from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response, flatten_subdoc_result
 from db.quarters import quarterPut as upsert_quarter, quarterGet as get_for_quarter
 
 offering_bucket = cluster.open_bucket('offerings')
@@ -28,7 +28,10 @@ def offeringGet(quarterId, courseId, sectionId):
     
 
 def all_offerings():
-    return json_response(list(quarter['offerings'] for quarter in offering_bucket.n1ql_query('select * from offerings'))) 
+    all_nested = list(quarter['offerings'] for quarter in offering_bucket.n1ql_query('select * from offerings'))
+    
+    
+    return json_response(flatten_subdoc_result(all_nested, 2)) 
 
 def __offering_lookup_helper(qId, path):
     ob_data = offering_bucket.lookup_in(qId, subdoc.get(path))  # type: SubdocResult

@@ -9,7 +9,7 @@ def catch_missing(function):
         try:
             return function(*args, **kwargs)
         except (NotFoundError, SubdocPathNotFoundError) as err:
-            return make_response("for {} {}, {} not found".format(request.method, function.__name__, err.key), 204)
+            return json_response(None, 200)
     
     return wrapper
 
@@ -39,3 +39,14 @@ def require_json_data(function):
 def json_response(data, code=200):
     return Response(response=json.dumps(data), status=code, mimetype='application/json')
 
+
+def flatten_subdoc_result(lod, levels=2):
+  if not (levels):
+    return lod
+  
+  one_flatter = []
+  for d in lod:
+    one_flatter.extend(d.values())
+    
+  return flatten_subdoc_result(one_flatter, levels-1)
+  

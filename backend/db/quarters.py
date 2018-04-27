@@ -22,7 +22,15 @@ def quarterPut(quarterId):
 
 
 def quarterGet(quarterId):
-    return json_response(offering_bucket.get(quarterId, quiet=True).value) 
+    all_nested = offering_bucket.get(quarterId, quiet=True).value
+    if not all_nested:
+        return json_response(None)
+
+    flat = []
+    for values in ((list(value.values()) for value in all_nested.values())):
+        flat.extend(values)
+
+    return json_response(flat) 
 
 
 def quarterDelete(quarterId):
