@@ -18,6 +18,7 @@ def quarter_main(quarterId):
 @catch_already_exists
 def quarterPut(quarterId):
     offering_bucket.insert(quarterId, {})  # upsert would wipe
+    return make_response("Created quarter", 200)
 
 
 def quarterGet(quarterId):
