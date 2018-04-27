@@ -1,11 +1,11 @@
 from flask import Flask, request, Response, json, make_response
 import db.couchbase_server as cb
-from adb_utils import catch404, require_json_data, catch_already_exists, json_response
+from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
 
 user_bucket = cb.cluster.open_bucket('users')
 
 
-@catch404
+@catch_missing
 def user_main(userId):
     method_map = {"GET": userGet, "PUT": userPut, "POST": userPost, "DELETE": userDelete}
     if request.method not in method_map:

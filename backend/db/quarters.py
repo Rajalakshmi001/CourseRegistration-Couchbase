@@ -1,12 +1,12 @@
 from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
-from adb_utils import catch404, require_json_data, catch_already_exists, json_response
+from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
 
 offering_bucket = cluster.open_bucket('offerings')
 
 
-@catch404
+@catch_missing
 def quarter_main(quarterId):
     method_map = {"GET": quarterGet, "DELETE": quarterDelete}
     if request.method not in method_map:

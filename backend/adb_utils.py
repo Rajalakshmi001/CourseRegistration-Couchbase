@@ -3,7 +3,7 @@ import json
 from flask import make_response, request, Response
 from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError, SubdocPathExistsError
 
-def catch404(function):
+def catch_missing(function):
     @functools.wraps(function)
     def wrapper(*args, **kwargs):
         try:
