@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, json
+from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
 from adb_utils import catch404, require_json_data, catch_already_exists, json_response
@@ -21,8 +21,9 @@ def quarterPut(quarterId):
 
 
 def quarterGet(quarterId):
-    return json_response(offering_bucket.get(quarterId, silent=True)) 
+    return json_response(offering_bucket.get(quarterId, quiet=True).value) 
 
 
 def quarterDelete(quarterId):
-    pass
+    offering_bucket.remove(quarterId)
+    return make_response("Deleted")

@@ -34,6 +34,7 @@ def course(courseId=None):
     return courses.course_main(courseId)
 
 
+@app.route('/offering')
 @app.route('/offering/<quarterId>', methods=['GET'])
 @app.route('/offering/<quarterId>/<courseId>', methods=['GET'])
 @app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['GET'])
