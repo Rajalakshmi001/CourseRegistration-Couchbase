@@ -18,7 +18,7 @@ def user(userId=None):
     return users.user_main(userId)
 
 
-@app.route('/course', methods=['GET'])
+@app.route('/course', methods=['GET', 'PUT'])
 @app.route('/course/<courseId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 def course(courseId=None):

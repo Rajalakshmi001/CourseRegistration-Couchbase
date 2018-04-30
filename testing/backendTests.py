@@ -36,3 +36,5 @@ def test_offerings():
 test_users()
 test_courses()
 test_offerings()
+
+print("\n\n\t\tALL TESTS PASSED")
