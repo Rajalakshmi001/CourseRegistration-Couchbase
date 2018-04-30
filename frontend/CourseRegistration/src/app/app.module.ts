@@ -28,6 +28,21 @@ import { HomeComponent } from './pages/home/home.component';
 import { InfoMessageComponent } from './components/info-message/info-message.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
+const matImports = [
+  MatSelectModule,
+  MatAutocompleteModule,
+  MatTableModule,
+  MatSidenavModule,
+  MatListModule,
+  MatIconModule,
+  MatSnackBarModule,
+  MatTooltipModule,
+  MatButtonModule,
+  MatToolbarModule,
+  MatCardModule,
+  MatInputModule,
+];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,20 +59,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatCardModule,
-    MatInputModule,
     ReactiveFormsModule,
-    MatButtonModule,
     HttpModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatSnackBarModule,
-    MatTooltipModule,
+    ...matImports,
   ],
   providers: [DeviceService, NotificationService, DatabaseService],
   bootstrap: [AppComponent]
