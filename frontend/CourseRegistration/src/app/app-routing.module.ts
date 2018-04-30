@@ -1,20 +1,16 @@
-import { CreateOfferingComponent } from './components/create-offering/create-offering.component';
-import { CreateCourseComponent } from './components/create-course/create-course.component';
+import { CreateOfferingComponent } from './pages/create-offering/create-offering.component';
+import { CreateCourseComponent } from './pages/create-course/create-course.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { UserPageComponent } from './components/user-page/user-page.component';
-import { CreateUserComponent } from './components/create-student/create-student.component';
-import { RegisterComponent } from './components/register/register.component';
-import { LookupComponent } from './components/lookup/lookup.component';
-import { HomeComponent } from './components/home/home.component';
+import { CreateUserComponent } from './pages/create-student/create-student.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { LookupComponent } from './pages/lookup/lookup.component';
+import { HomeComponent } from './pages/home/home.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent
-  }, {
-    path: 'user',
-    component: UserPageComponent
   }, {
     path: 'create-course',
     component: CreateCourseComponent

@@ -44,7 +44,6 @@ export class DatabaseService {
       this.http.get(`${environment.flaskRoot}/offering/${quarter}/${courseNum}`).subscribe(data => {
         if (data.status === 200) {
           const resp: Offering[] = JSON.parse(data['_body']);
-          console.log(resp);
           resolve(resp);
         } else if (data.status === 204) {
           resolve([]);

@@ -6,6 +6,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Http } from '@angular/http';
 import { Course } from '../../models/course.model';
 import { DatabaseService } from '../../services/database/database.service';
+import * as _ from 'lodash';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register',
@@ -20,8 +22,12 @@ export class RegisterComponent implements OnInit {
   public years: number[];
   public offerings: String[];
   public quarters: { name: String, value: String }[];
+  public lastVal: any;
+  private snackbar: MatSnackBarRef<SimpleSnackBar>;
 
-  constructor(private http: Http, private notificationService: NotificationService, private db: DatabaseService) { }
+  constructor(private http: Http,
+    private notificationService: NotificationService,
+    private db: DatabaseService) { }
 
   ngOnInit() {
     this.getCourses();
@@ -34,27 +40,33 @@ export class RegisterComponent implements OnInit {
       offeringId: new FormControl('', Validators.required),
     });
 
+    this.lastVal = this.form.value;
+    this.form.get('offeringId').disable();
+
     this.students = [];
-
     this.courses = [];
-
-    this.offerings = [];
-
+    this.offerings = null;
     this.quarters = [
       { name: 'Spring', value: 'spring' },
       { name: 'Summer', value: 'summer' },
       { name: 'Fall', value: 'fall' },
       { name: 'Winter', value: 'winter' },
     ];
-
     this.years = [2017, 2018, 2019, 2020];
 
     this.form.valueChanges.subscribe(data => {
-      console.log(data);
-      if (data && data.courseNum && data.year && data.quarter) {
-        // pull offerings
+      if (!data.offeringId) {
+        data.offeringId = '';
+      }
+      const requiredValuesEnter = data && data.courseNum && data.year && data.quarter;
+      const formDataChanged = !_.isEqual(data, this.lastVal);
+      this.lastVal = data;
+
+      if (requiredValuesEnter && formDataChanged) {
         this.getOfferings(data.courseNum, data.year, data.quarter);
-        console.log('ready');
+      } else if (formDataChanged) {
+        this.offerings = null;
+        this.form.get('offeringId').disable();
       }
     });
   }
@@ -76,11 +88,23 @@ export class RegisterComponent implements OnInit {
   }
 
   getOfferings(courseNum: String, year: Number, quarter: String) {
+    if (this.snackbar) {
+      this.snackbar.dismiss();
+      this.snackbar = null;
+    }
     const q = quarter + String(year);
     this.db.getOfferings(courseNum, q).then(data => {
-      console.log(data);
+      if (data) {
+        this.form.get('offeringId').enable();
+        this.offerings = data.map(val => `${val.offeringId}`);
+      } else {
+        this.offerings = [];
+        this.form.get('offeringId').disable();
+        this.snackbar = this.notificationService.showSnackbar('No offerings currently exist for this course/time :(');
+      }
     }).catch(err => {
       console.error(err);
+      this.notificationService.networkError(err);
     });
   }
 }
