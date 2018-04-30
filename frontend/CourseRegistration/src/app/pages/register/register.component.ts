@@ -39,7 +39,7 @@ export class RegisterComponent implements OnInit {
       offeringId: new FormControl('', Validators.required),
     });
 
-    this.lastVal = this.form.value;
+    this.lastVal = _.clone(this.form.value);
     this.form.get('offeringId').disable();
 
     this.students = [];
@@ -71,7 +71,21 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    console.log(this.form.value);
+    const data = _.clone(this.form.value);
+    data.quarterId = data.quarter + data.year;
+    delete data.quarter;
+    delete data.year;
+    this.http.put(`${environment.flaskRoot}/register`, data).subscribe(resp => {
+      if (resp.status >= 200 && resp.status < 300) {
+        this.notificationService.showSnackbar(`Successfully registered ${data.studentId} for ${data.courseNum}-${data.offeringId}`);
+      }
+    }, err => {
+      if (err.status === 304) {
+        this.notificationService.showSnackbar('User is already registered for this course :(');
+      } else {
+        this.notificationService.showSnackbar('An unknown error occured :(');
+      }
+    });
   }
 
   getStudents() {
