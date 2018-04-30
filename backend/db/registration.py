@@ -7,7 +7,7 @@ off_bucket = cluster.open_bucket('offerings')
 sched_bucket = cluster.open_bucket('schedules')
 
 def register_main():
-    method_map = {"GET": registerGet, "PUT": registerPut, "POST": registerPost, "DELETE": registerDelete}
+    method_map = {"GET": registerGet, "PUT": registerPut, "DELETE": registerDelete}
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for registrations".format(request.method))
     
@@ -35,12 +35,10 @@ def registerPut(userId, quarterId, courseId, sectionNum):
     except:
         pass
     sched_bucket.mutate_in(userId+"-"+quarterId, subdoc.insert('offerings.'+courseId, sectionNum, create_parents=True))
-    return make_response("Registered {} for {}: {}-{}".format(userId, quarterId, courseId, sectionNum))
+    return make_response("Registered {} for {}: {}-{}".format(userId, quarterId, courseId, sectionNum), 201)
 
 
-def registerPost(userId, quarterId, courseId, sectionNum):
-    pass
-
-
-def registerDelete(userId, quarterId, courseId, sectionNum):
-    pass
+@catch_missing
+def registerDelete(userId, quarterId, courseId, *_):
+    sched_bucket.mutate_in(userId+"-"+quarterId, subdoc.remove('offerings.'+courseId))
+    return make_response("Un-registered {} from {}: {}".format(userId, quarterId, courseId))
