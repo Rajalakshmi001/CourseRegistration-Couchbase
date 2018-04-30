@@ -1,10 +1,10 @@
 import { User } from './../../models/user.model';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { NotificationService } from '../notification/notification.service';
 import { Course } from '../../models/course.model';
 import { Offering } from '../../models/offering.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class DatabaseService {
