@@ -25,7 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NotificationService } from './services/notification/notification.service';
 import { HomeComponent } from './pages/home/home.component';
-import { WarningComponent } from './components/warning/warning.component';
+import { InfoMessageComponent } from './components/info-message/info-message.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,7 @@ import { WarningComponent } from './components/warning/warning.component';
     FilterPipe,
     LookupComponent,
     HomeComponent,
-    WarningComponent,
+    InfoMessageComponent,
   ],
   imports: [
     BrowserModule,

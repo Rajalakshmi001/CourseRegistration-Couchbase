@@ -4,7 +4,7 @@
   </mat-card-header>
 
   <mat-card-content>
-    <app-warning *ngIf="offerings && offerings.length === 0" message="There are not currently any offerings for this course/quarter" type="warning"></app-warning>
+    <app-info-message *ngIf="offerings && offerings.length === 0" message="There are not currently any offerings for this course/quarter" type="warning"></app-info-message>
     <form [formGroup]="form">
       <mat-form-field>
         <input type="text" matInput formControlName="studentId" placeholder="Select Student Username" [matAutocomplete]="studentAuto">

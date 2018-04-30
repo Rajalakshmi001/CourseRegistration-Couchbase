@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-create-student',
@@ -14,7 +15,7 @@ export class CreateUserComponent implements OnInit {
 
   public form: FormGroup;
 
-  constructor(private http: Http, private snackbar: MatSnackBar) { }
+  constructor(private http: Http, private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.createForm();
@@ -33,14 +34,14 @@ export class CreateUserComponent implements OnInit {
     const data: User = this.form.value;
     this.http.put(`${environment.flaskRoot}/user/${data.username}`, data).subscribe(resp => {
       if (resp.status >= 200 && resp.status < 300) {
-        this.snackbar.open('User Created!', 'OK', { duration: 2000 });
+        this.notificationService.showSnackbar('User Created!', 'OK');
         this.form.reset();
         this.form.markAsPristine();
         this.form.updateValueAndValidity();
       }
     }, err => {
       if (err.status === 304) {
-        this.snackbar.open('Username already exists :(', 'OK', { duration: 2000 });
+        this.notificationService.showSnackbar('Username already exists :(', 'OK');
       }
     });
   }

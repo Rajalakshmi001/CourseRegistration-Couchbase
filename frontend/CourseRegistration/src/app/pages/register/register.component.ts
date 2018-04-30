@@ -23,7 +23,6 @@ export class RegisterComponent implements OnInit {
   public offerings: String[];
   public quarters: { name: String, value: String }[];
   public lastVal: any;
-  private snackbar: MatSnackBarRef<SimpleSnackBar>;
 
   constructor(private http: Http,
     private notificationService: NotificationService,
@@ -88,10 +87,6 @@ export class RegisterComponent implements OnInit {
   }
 
   getOfferings(courseNum: String, year: Number, quarter: String) {
-    if (this.snackbar) {
-      this.snackbar.dismiss();
-      this.snackbar = null;
-    }
     const q = quarter + String(year);
     this.db.getOfferings(courseNum, q).then(data => {
       if (data) {
@@ -100,7 +95,7 @@ export class RegisterComponent implements OnInit {
       } else {
         this.offerings = [];
         this.form.get('offeringId').disable();
-        this.snackbar = this.notificationService.showSnackbar('No offerings currently exist for this course/time :(');
+        this.notificationService.showSnackbar('No offerings currently exist for this course/time :(');
       }
     }).catch(err => {
       console.error(err);

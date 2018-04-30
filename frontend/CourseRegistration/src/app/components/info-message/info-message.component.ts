@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-warning',
-  templateUrl: './warning.component.html',
-  styleUrls: ['./warning.component.scss']
+  selector: 'app-info-message',
+  templateUrl: './info-message.component.html',
+  styleUrls: ['./info-message.component.scss']
 })
-export class WarningComponent implements OnInit {
+export class InfoMessageComponent implements OnInit {
 
   @Input() message: String = '';
   @Input() type: 'warning' | 'error' | 'success' | '' = '';
