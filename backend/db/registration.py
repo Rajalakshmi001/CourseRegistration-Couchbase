@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, json
+from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
 from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
@@ -28,18 +28,14 @@ def registerGet(userId, quarterId, courseId, *a, **kw):
     pass
 
 
+@catch_already_exists
 def registerPut(userId, quarterId, courseId, sectionNum):
-    print("Registering {} to {}:{}-{}".format(userId, quarterId, courseId, sectionNum))
-    # add to /offerings
-    # off_bucket.mutate_in(quarterId, subdoc.array_addunique('.'.join((courseId, sectionNum, 'registrations')), userId, create_parents=True))
-
-    # add to /schedules
-    # return Response(response=json.dumps(request.get_json()), status=200, mimetype='application/json')
     try:
-        sched_bucket.insert(userId+"-"+quarterId, {})
+        sched_bucket.insert(userId+"-"+quarterId, {"studentId": userId, "quarterId": quarterId})
     except:
         pass
-    sched_bucket.mutate_in(userId+"-"+quarterId, subdoc.upsert('offerings.'+courseId, sectionNum, create_parents=True))
+    sched_bucket.mutate_in(userId+"-"+quarterId, subdoc.insert('offerings.'+courseId, sectionNum, create_parents=True))
+    return make_response("Registered {} for {}: {}-{}".format(userId, quarterId, courseId, sectionNum))
 
 
 def registerPost(userId, quarterId, courseId, sectionNum):
