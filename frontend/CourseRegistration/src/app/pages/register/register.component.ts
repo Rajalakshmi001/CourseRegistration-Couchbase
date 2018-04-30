@@ -34,8 +34,8 @@ export class RegisterComponent implements OnInit {
     this.form = new FormGroup({
       studentId: new FormControl('', Validators.required),
       courseNum: new FormControl('', Validators.required),
-      year: new FormControl('', Validators.required),
-      quarter: new FormControl('', Validators.required),
+      year: new FormControl(2018, Validators.required),
+      quarter: new FormControl('spring', Validators.required),
       offeringId: new FormControl('', Validators.required),
     });
 

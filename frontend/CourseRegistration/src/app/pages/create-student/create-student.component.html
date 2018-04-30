@@ -1,10 +1,11 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Create A New Student</mat-card-title>
+    <mat-card-title>Create A New User</mat-card-title>
   </mat-card-header>
 
   <mat-card-content>
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="card-section">
+      <span class="card-section-heading">User Information</span>
       <mat-form-field class="full-width-input">
         <input matInput placeholder="Student Name" formControlName="name">
       </mat-form-field>

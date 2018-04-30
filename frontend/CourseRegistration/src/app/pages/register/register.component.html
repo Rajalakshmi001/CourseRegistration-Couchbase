@@ -4,18 +4,21 @@
   </mat-card-header>
 
   <mat-card-content>
-    <app-info-message *ngIf="offerings && offerings.length === 0" message="There are not currently any offerings for this course/quarter" type="warning"></app-info-message>
     <form [formGroup]="form">
-      <mat-form-field>
-        <input type="text" matInput formControlName="studentId" placeholder="Select Student Username" [matAutocomplete]="studentAuto">
-      </mat-form-field>
-      <mat-autocomplete #studentAuto="matAutocomplete">
-        <mat-option *ngFor="let student of (students | filterPipe:form.get('studentId').value)" [value]="student">
-          {{ student }}
-        </mat-option>
-      </mat-autocomplete>
+      <div class="card-section">
+        <span class="card-section-heading">Student</span>
+        <mat-form-field>
+          <input type="text" matInput formControlName="studentId" placeholder="Select Student Username" [matAutocomplete]="studentAuto">
+        </mat-form-field>
+        <mat-autocomplete #studentAuto="matAutocomplete">
+          <mat-option *ngFor="let student of (students | filterPipe:form.get('studentId').value)" [value]="student">
+            {{ student }}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
 
-      <div>
+      <div class="card-section">
+        <span class="card-section-heading">Quarter</span>
         <mat-form-field>
           <mat-select placeholder="Select Quarter" formControlName="quarter" class="full-width-input">
             <mat-option *ngFor="let quarter of quarters" [value]="quarter.value">
@@ -32,7 +35,11 @@
         </mat-form-field>
       </div>
 
-      <div>
+      <div class="card-section">
+        <span class="card-section-heading">Course</span>
+        <app-info-message *ngIf="offerings && offerings.length === 0" message="There are not currently any offerings for this course/quarter"
+          type="warning">
+        </app-info-message>
         <mat-form-field>
           <input type="text" matInput formControlName="courseNum" placeholder="Select Course Number" [matAutocomplete]="courseAuto">
         </mat-form-field>
@@ -42,7 +49,7 @@
           </mat-option>
         </mat-autocomplete>
 
-        <mat-form-field>
+        <mat-form-field matTooltip="Select a course and quarter to see sections" matTooltipPosition="above" [matTooltipDisabled]="offerings">
           <mat-select placeholder="Select Section Id" formControlName="offeringId" class="full-width-input">
             <mat-option *ngFor="let offering of offerings" [value]="offering">
               {{offering}}
@@ -50,8 +57,7 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <br/>
-      <button mat-button [disabled]="form.invalid" color="primary" (click)="register()">Create</button>
+      <button mat-button [disabled]="form.invalid || !offerings || offerings.length === 0" color="primary" (click)="register()">Create</button>
     </form>
   </mat-card-content>
 </mat-card>

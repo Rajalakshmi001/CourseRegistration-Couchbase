@@ -26,6 +26,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NotificationService } from './services/notification/notification.service';
 import { HomeComponent } from './pages/home/home.component';
 import { InfoMessageComponent } from './components/info-message/info-message.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { InfoMessageComponent } from './components/info-message/info-message.com
     MatListModule,
     MatIconModule,
     MatSnackBarModule,
+    MatTooltipModule,
   ],
   providers: [DeviceService, NotificationService, DatabaseService],
   bootstrap: [AppComponent]

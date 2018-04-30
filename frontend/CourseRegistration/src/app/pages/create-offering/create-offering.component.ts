@@ -31,8 +31,8 @@ export class CreateOfferingComponent implements OnInit {
         this.form = new FormGroup({
             prof: new FormControl('', Validators.required),
             courseNum: new FormControl('', Validators.required),
-            quarter: new FormControl('', Validators.required),
-            year: new FormControl('', Validators.required),
+            quarter: new FormControl('spring', Validators.required),
+            year: new FormControl(2018, Validators.required),
             hour: new FormControl('', Validators.required),
             days: new FormControl([], Validators.required),
             capacity: new FormControl(0, Validators.min(0)),
