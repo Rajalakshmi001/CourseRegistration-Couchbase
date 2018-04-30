@@ -30,7 +30,7 @@ export class CreateCourseComponent implements OnInit {
     const data: Course = this.form.value;
     this.http.put(`${environment.flaskRoot}/course/${data.courseNum}`, data).subscribe(resp => {
       console.log(resp);
-      if (resp.status === 200) {
+      if (resp.status >= 200 && resp.status < 300) {
         this.snackbar.open('Course Created!', 'OK', { duration: 2000 });
         this.form.reset();
       }

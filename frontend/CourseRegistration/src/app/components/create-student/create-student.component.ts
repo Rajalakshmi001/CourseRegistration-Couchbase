@@ -32,7 +32,7 @@ export class CreateUserComponent implements OnInit {
   createStudent() {
     const data: User = this.form.value;
     this.http.put(`${environment.flaskRoot}/user/${data.username}`, data).subscribe(resp => {
-      if (resp.status === 200) {
+      if (resp.status >= 200 && resp.status < 300) {
         this.snackbar.open('User Created!', 'OK', { duration: 2000 });
         this.form.reset();
         this.form.markAsPristine();

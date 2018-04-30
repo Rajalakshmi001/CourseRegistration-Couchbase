@@ -91,7 +91,7 @@ export class CreateOfferingComponent implements OnInit {
         console.log(offering);
         this.http.put(`${environment.flaskRoot}/offering/${offering.quarter}/${offering.courseNum}/${offering.offeringId}`,
             offering).subscribe(resp => {
-                if (resp.status === 200) {
+                if (resp.status >= 200 && resp.status < 300) {
                     this.snackbar.open('Offering Created!', 'OK', { duration: 2000 });
                     this.form.reset();
                 }
