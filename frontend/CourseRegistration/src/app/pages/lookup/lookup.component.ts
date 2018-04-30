@@ -60,6 +60,9 @@ export class LookupComponent implements OnInit {
     this.http.get(`${environment.flaskRoot}/lookup/${data.studentId}/${data.quarter}${data.year}`).subscribe(resp => {
       const respData = JSON.parse(resp['_body']);
       console.log(respData);
+      if (!respData) {
+        return;
+      }
       this.rawSchedule = respData.offerings;
       const offeringCallbacks = [];
       for (const courseNum in this.rawSchedule) {

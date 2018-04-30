@@ -75,6 +75,7 @@ export class RegisterComponent implements OnInit {
     data.quarterId = data.quarter + data.year;
     delete data.quarter;
     delete data.year;
+    console.log(data);
     this.http.put(`${environment.flaskRoot}/register`, data).subscribe(resp => {
       if (resp.status >= 200 && resp.status < 300) {
         this.notificationService.showSnackbar(`Successfully registered ${data.studentId} for ${data.courseNum}-${data.offeringId}`);

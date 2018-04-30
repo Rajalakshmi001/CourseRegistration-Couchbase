@@ -8,10 +8,10 @@
   <mat-drawer [mode]="isMobile ? 'over' : 'side'" [opened]="isMobile ? sidebarOpen : true" role="navigation">
     <mat-nav-list>
       <a mat-list-item routerLink="lookup" (click)="sidebarOpen = false">Lookup Schedule</a>
+      <a mat-list-item routerLink="register" (click)="sidebarOpen = false">Register</a>
       <a mat-list-item routerLink="create-user" (click)="sidebarOpen = false">Create User</a>
       <a mat-list-item routerLink="create-course" (click)="sidebarOpen = false">Create Course</a>
       <a mat-list-item routerLink="create-offering" (click)="sidebarOpen = false">Create Offering</a>
-      <a mat-list-item routerLink="register" (click)="sidebarOpen = false">Register</a>
     </mat-nav-list>
   </mat-drawer>
   <mat-drawer-content>

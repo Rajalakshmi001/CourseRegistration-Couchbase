@@ -28,18 +28,7 @@ export class CreateOfferingComponent implements OnInit {
 
     ngOnInit() {
         this.getCourses();
-        this.form = new FormGroup({
-            prof: new FormControl('', Validators.required),
-            courseNum: new FormControl('', Validators.required),
-            quarter: new FormControl('spring', Validators.required),
-            year: new FormControl(2018, Validators.required),
-            hour: new FormControl('', Validators.required),
-            days: new FormControl([], Validators.required),
-            capacity: new FormControl(0, Validators.min(0)),
-            enrolled: new FormControl(0),
-            offeringId: new FormControl(0),
-        });
-
+        this.createForm();
         this.professors = [
             { name: 'Sriram', value: 'key1' },
             { name: 'Boutell', value: 'key2' },
@@ -67,6 +56,20 @@ export class CreateOfferingComponent implements OnInit {
         this.hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     }
 
+    private createForm() {
+        this.form = new FormGroup({
+            prof: new FormControl('', Validators.required),
+            courseNum: new FormControl('', Validators.required),
+            quarter: new FormControl('spring', Validators.required),
+            year: new FormControl(2018, Validators.required),
+            hour: new FormControl('', Validators.required),
+            days: new FormControl([], Validators.required),
+            capacity: new FormControl(0, Validators.min(0)),
+            enrolled: new FormControl(0, Validators.required),
+            offeringId: new FormControl(1, Validators.required),
+        });
+    }
+
     getCourses() {
         this.db.getCourses().then(courses => {
             this.courses = courses.map(val => {
@@ -92,7 +95,8 @@ export class CreateOfferingComponent implements OnInit {
             offering).subscribe(resp => {
                 if (resp.status >= 200 && resp.status < 300) {
                     this.notificationService.showSnackbar('Offering Created!');
-                    this.form.reset();
+                    // this.form.reset();
+                    this.createForm();
                 }
             }, err => {
                 console.error(err);
