@@ -4,7 +4,6 @@ stages:
 - test
 - save_commit
 - rollback
-- test
 
 before_script: 
 - rm -f /tmp/privkey
@@ -30,9 +29,12 @@ run_tests:
     script:
     - chmod +x testing/flaskTests.sh
     - ./testing/flaskTests.sh
+    - python3 testing/backendTests.py
     when: on_success
     tags: 
     - ubuntu
+    - python
+    - csse477
 
 save_good_commit_hash:
     stage: save_commit

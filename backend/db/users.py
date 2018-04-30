@@ -1,14 +1,13 @@
 from flask import Flask, request, Response, json, make_response
-from db.couchbase_server import *
-from utils import catch404, require_json_data, catch_already_exists
+import db.couchbase_server as cb
+from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
 
-user_bucket = cluster.open_bucket('users')
+user_bucket = cb.cluster.open_bucket('users')
 
 
-@catch404
+@catch_missing
 def user_main(userId):
     method_map = {"GET": userGet, "PUT": userPut, "POST": userPost, "DELETE": userDelete}
-    print(request.method, userId)
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for users".format(request.method))
 
@@ -20,10 +19,9 @@ def user_main(userId):
 def userGet(userId):
     if not userId:
         # return all users
-        return Response(response=json.dumps(list(user_bucket.n1ql_query('select username,name from users'))), status=200, mimetype='application/json')
-    print("Getting " + userId)
-    ub_data = user_bucket.get(userId)  # type: ValueResult
-    return Response(response=json.dumps(ub_data.value), status=200, mimetype='application/json')
+        return json_response(list(user_bucket.n1ql_query('select username,name from users')))
+    
+    return json_response(user_bucket.get(userId, quiet=True).value)  # type: ValueResult
     
 
 @require_json_data
@@ -31,7 +29,7 @@ def userGet(userId):
 def userPut(userId):
     data = request.get_json()
     user_bucket.insert(userId, request.get_json())  # type: OperationResult
-    return make_response('User ' + userId + ' inserted', 200)
+    return make_response('User ' + userId + ' inserted', 201)
 
 
 def userPost(userId):
