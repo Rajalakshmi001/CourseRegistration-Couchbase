@@ -25,6 +25,7 @@ import { DeviceService } from './services/device/device.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NotificationService } from './services/notification/notification.service';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NotificationService } from './services/notification/notification.servic
     RegisterComponent,
     FilterPipe,
     LookupComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

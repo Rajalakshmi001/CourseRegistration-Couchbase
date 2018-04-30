@@ -6,34 +6,35 @@ import { UserPageComponent } from './components/user-page/user-page.component';
 import { CreateUserComponent } from './components/create-student/create-student.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LookupComponent } from './components/lookup/lookup.component';
+import { HomeComponent } from './components/home/home.component';
 
-const routes: Routes = [{
-  path: 'user',
-  component: UserPageComponent,
-},
-{
-  path: 'create-course',
-  component: CreateCourseComponent,
-},
-{
-  path: 'create-offering',
-  component: CreateOfferingComponent,
-},
-{
-  path: 'create-user',
-  component: CreateUserComponent,
-},
-{
-  path: 'register',
-  component: RegisterComponent,
-},
-{
-  path: 'lookup',
-  component: LookupComponent,
-}];
+const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent
+  }, {
+    path: 'user',
+    component: UserPageComponent
+  }, {
+    path: 'create-course',
+    component: CreateCourseComponent
+  }, {
+    path: 'create-offering',
+    component: CreateOfferingComponent
+  }, {
+    path: 'create-user',
+    component: CreateUserComponent
+  }, {
+    path: 'register',
+    component: RegisterComponent
+  }, {
+    path: 'lookup',
+    component: LookupComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+exports: [RouterModule]
 })
 export class AppRoutingModule { }
