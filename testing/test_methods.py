@@ -53,8 +53,10 @@ def test_all(sample_data: dict, sample_path: str, all_path=None, others_for_all=
     delete(sample_path)
     # get should return null
     assert not get(sample_path)
-    # put
-    assert 200 <= put(sample_path, sample_data) < 304
+    # put gives 200-level code
+    assert 200 <= put(sample_path, sample_data) < 300
+    # put again returns 304
+    assert 304 == put(sample_path, sample_data)
     # get should return data
     assert get(sample_path) == sample_data
 
