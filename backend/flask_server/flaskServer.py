@@ -57,6 +57,7 @@ def registerForCourse():
     return registration.register_main()
 
 @app.route('/lookup/<studentId>/<quarterId>', methods=['GET'])
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
 def scheduleLookup(studentId, quarterId):
     return registration.registerGet(studentId, quarterId)
 
