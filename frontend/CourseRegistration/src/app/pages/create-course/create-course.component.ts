@@ -6,6 +6,7 @@ import { Http } from '@angular/http';
 import { HttpClient } from 'selenium-webdriver/http';
 import { Input } from '@angular/core';
 import { Course } from '../../models/course.model';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-create-course',
@@ -16,7 +17,7 @@ export class CreateCourseComponent implements OnInit {
 
   public form: FormGroup;
 
-  constructor(public http: Http, private snackbar: MatSnackBar) { }
+  constructor(public http: Http, private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -31,11 +32,11 @@ export class CreateCourseComponent implements OnInit {
     this.http.put(`${environment.flaskRoot}/course/${data.courseNum}`, data).subscribe(resp => {
       console.log(resp);
       if (resp.status >= 200 && resp.status < 300) {
-        this.snackbar.open('Course Created!', 'OK', { duration: 2000 });
+        this.notificationService.showSnackbar('Course Created!');
         this.form.reset();
       }
     }, err => {
-      this.snackbar.open('Failed to create course :(', 'OK', { duration: 2000 });
+      this.notificationService.showSnackbar('Failed to create course :(');
     });
   }
 

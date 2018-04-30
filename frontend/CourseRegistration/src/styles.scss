@@ -29,14 +29,33 @@ body {
 
 mat-card {
   margin: 16px;
-  .full-width-input {
-    width: 100%;
+  .card-section {
+    padding-left: 20px;
+    +.card-section {
+      margin-top: 12px;
+    }
+    .card-section-heading {
+      display: block;
+      margin-left: -20px;
+      padding: 12px 0;
+      font-size: 20px;
+      color: grey;
+      border-top: 1px solid lightgrey;
+    }
   }
 }
 
-mat-form-field {
+mat-form-field,
+mat-autocomplete {
   @media(max-width: 650px) {
     max-width: 49%;
+  }
+  &.full-width-input {
+    width: 100%;
+  }
+  +mat-form-field:not(.full-width-input),
+  +mat-autocomplete:not(.full-width-input) {
+    margin-left: 4px;
   }
 }
 

@@ -5,7 +5,8 @@
 
   <mat-card-content>
     <form [formGroup]="form">
-      <div>
+      <div class="card-section">
+        <span class="card-section-heading"> Basic Info </span>
         <mat-form-field>
           <mat-select placeholder="Select Course" formControlName="courseNum">
             <mat-option *ngFor="let course of courses" [value]="course.value">
@@ -23,7 +24,8 @@
         </mat-form-field>
       </div>
 
-      <div>
+      <div class="card-section">
+        <span class="card-section-heading"> Timing </span>
         <mat-form-field>
           <mat-select placeholder="Select Quarter" formControlName="quarter">
             <mat-option *ngFor="let quarter of quarters" [value]="quarter.value">
@@ -57,13 +59,14 @@
         </mat-form-field>
       </div>
 
-      <div>
+      <div class="card-section">
+        <span class="card-section-heading"> Other </span>
         <mat-form-field>
           <input type="number" matInput placeholder="Capacity" formControlName="capacity">
         </mat-form-field>
       </div>
 
-      <div>
+      <div class="card-section">
         <mat-form-field>
           <input type="number" matInput placeholder="Course Id" formControlName="offeringId" min="1">
         </mat-form-field>

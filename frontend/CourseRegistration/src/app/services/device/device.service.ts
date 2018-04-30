@@ -6,7 +6,7 @@ export class DeviceService {
   constructor() { }
 
   get isMobile(): boolean {
-    return window.innerWidth <= 600;
+    return Math.min(window.innerWidth, window.innerHeight) <= 500;
   }
 
 }

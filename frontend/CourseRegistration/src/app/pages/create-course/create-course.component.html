@@ -4,7 +4,8 @@
   </mat-card-header>
 
   <mat-card-content>
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="card-section">
+      <span class="card-section-heading">Course Information</span>
       <mat-form-field class="full-width-input">
         <input matInput placeholder="Course Name" formControlName="name">
       </mat-form-field>

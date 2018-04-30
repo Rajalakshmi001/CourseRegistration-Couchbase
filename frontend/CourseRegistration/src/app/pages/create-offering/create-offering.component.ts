@@ -24,16 +24,15 @@ export class CreateOfferingComponent implements OnInit {
 
     constructor(private http: Http,
         private db: DatabaseService,
-        private notificationService: NotificationService,
-        private snackbar: MatSnackBar) { }
+        private notificationService: NotificationService) { }
 
     ngOnInit() {
         this.getCourses();
         this.form = new FormGroup({
             prof: new FormControl('', Validators.required),
             courseNum: new FormControl('', Validators.required),
-            quarter: new FormControl('', Validators.required),
-            year: new FormControl('', Validators.required),
+            quarter: new FormControl('spring', Validators.required),
+            year: new FormControl(2018, Validators.required),
             hour: new FormControl('', Validators.required),
             days: new FormControl([], Validators.required),
             capacity: new FormControl(0, Validators.min(0)),
@@ -92,12 +91,12 @@ export class CreateOfferingComponent implements OnInit {
         this.http.put(`${environment.flaskRoot}/offering/${offering.quarter}/${offering.courseNum}/${offering.offeringId}`,
             offering).subscribe(resp => {
                 if (resp.status >= 200 && resp.status < 300) {
-                    this.snackbar.open('Offering Created!', 'OK', { duration: 2000 });
+                    this.notificationService.showSnackbar('Offering Created!');
                     this.form.reset();
                 }
             }, err => {
                 console.error(err);
-                this.snackbar.open('Failed to create offering :(', 'OK', { duration: 2000 });
+                this.notificationService.showSnackbar('Failed To Create Offering :(');
             });
     }
 }
