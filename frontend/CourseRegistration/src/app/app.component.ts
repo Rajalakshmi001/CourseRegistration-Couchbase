@@ -13,12 +13,16 @@ export class AppComponent {
 
   constructor(public device: DeviceService) {
     this.isMobile = this.device.isMobile;
+
+    document.ontouchmove = function (event) {
+      event.preventDefault();
+    };
   }
 
   @HostListener('window:resize', ['$event'])
-    onResize(event) {
-      this.isMobile = this.device.isMobile;
-    }
+  onResize(event) {
+    this.isMobile = this.device.isMobile;
+  }
 
   public toggleSidebar() {
     this.sidebarOpen = !this.sidebarOpen;
