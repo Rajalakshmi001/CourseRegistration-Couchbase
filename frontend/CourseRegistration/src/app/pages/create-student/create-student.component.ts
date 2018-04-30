@@ -34,14 +34,14 @@ export class CreateUserComponent implements OnInit {
     const data: User = this.form.value;
     this.http.put(`${environment.flaskRoot}/user/${data.username}`, data).subscribe(resp => {
       if (resp.status >= 200 && resp.status < 300) {
-        this.notificationService.showSnackbar('User Created!', 'OK');
+        this.notificationService.showSnackbar('User Created!');
         this.form.reset();
         this.form.markAsPristine();
         this.form.updateValueAndValidity();
       }
     }, err => {
       if (err.status === 304) {
-        this.notificationService.showSnackbar('Username already exists :(', 'OK');
+        this.notificationService.showSnackbar('Username already exists :(');
       }
     });
   }
