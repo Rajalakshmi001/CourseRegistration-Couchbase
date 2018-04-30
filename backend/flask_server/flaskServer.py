@@ -56,6 +56,10 @@ def getRecommendations(userId):
 def registerForCourse():
     return registration.register_main()
 
+@app.route('/lookup/<studentId>/<quarterId>', methods=['GET'])
+def scheduleLookup(studentId, quarterId):
+    return registration.registerGet(studentId, quarterId)
+
 
 @app.route('/generateSchedules/', methods=['POST'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])

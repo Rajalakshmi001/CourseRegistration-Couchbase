@@ -24,8 +24,9 @@ def register_main():
     return method_map[request.method](userId, quarterId, courseId, sectionNum)
 
 
-def registerGet(userId, quarterId, courseId, *a, **kw):
-    pass
+@catch_missing
+def registerGet(studentId, quarterId):
+    return json_response(sched_bucket.get(studentId+'-'+quarterId, quiet=True).value)
 
 
 @catch_already_exists
