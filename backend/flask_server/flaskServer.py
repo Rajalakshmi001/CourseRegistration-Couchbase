@@ -50,10 +50,11 @@ def quarter(quarterId=None):
 def getRecommendations(userId):
     pass
 
-@app.route('/register/<userId>/<offeringId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
+
+@app.route('/register', methods=['PUT', 'POST', 'DELETE', 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
-def registerForCourse(userId, offeringId):
-    return registration.register_main(userId, offeringId)
+def registerForCourse():
+    return registration.register_main()
 
 
 @app.route('/generateSchedules/', methods=['POST'])

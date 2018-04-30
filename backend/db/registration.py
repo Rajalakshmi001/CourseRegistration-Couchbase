@@ -1,26 +1,44 @@
-from flask import Flask, request, Response, json
+from flask import Flask, request, Response, json, make_response
+from db.couchbase_server import *
+import couchbase.subdocument as subdoc 
+from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
 
+off_bucket = cluster.open_bucket('offerings')
+sched_bucket = cluster.open_bucket('schedules')
 
-def register_main(userId, offeringId):
-    method_map = {"GET": registerGet, "PUT": registerPut, "POST": registerPost, "DELETE": registerDelete}
-    print(request.method, userId, offeringId)
+def register_main():
+    method_map = {"GET": registerGet, "PUT": registerPut, "DELETE": registerDelete}
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for registrations".format(request.method))
     
-    return method_map[request.method](userId, offeringId)
+    data = request.get_json()
+    if not data:
+        data = request.headers
+    userId = data['studentId']
+    quarterId = data['quarterId']
+    courseId = data['courseNum']
+    sectionNum = data['offeringId']
+    if not (userId and quarterId and courseId and sectionNum):
+        raise ValueError("Missing param")
+
+    return method_map[request.method](userId, quarterId, courseId, sectionNum)
 
 
-def registerGet(userId, offeringId):
-    return "You tried to register '{}' for '{}', but this endpoint is not actually implemented yet".format(userId, offeringId)
-
-
-def registerPut(userId, offeringId):
-    return Response(response=json.dumps(request.get_json()), status=200, mimetype='application/json')
-
-
-def registerPost(userId, offeringId):
+def registerGet(userId, quarterId, courseId, *a, **kw):
     pass
 
 
-def registerDelete(userId, offeringId):
-    pass
+@catch_already_exists
+def registerPut(userId, quarterId, courseId, sectionNum):
+    try:
+        sched_bucket.insert(userId+"-"+quarterId, {"studentId": userId, "quarterId": quarterId})
+    except:
+        pass
+    sched_bucket.mutate_in(userId+"-"+quarterId, subdoc.insert('offerings.'+courseId, sectionNum, create_parents=True))
+    return make_response("Registered {} for {}: {}-{}".format(userId, quarterId, courseId, sectionNum), 201)
+
+
+@catch_missing
+def registerDelete(userId, quarterId, courseId, *_):
+    sched_bucket.mutate_in(userId+"-"+quarterId, subdoc.remove('offerings.'+courseId))
+    return make_response("Un-registered {} from {}: {}".format(userId, quarterId, courseId))
