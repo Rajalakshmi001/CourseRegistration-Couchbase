@@ -27,55 +27,16 @@ export class LookupComponent implements OnInit {
   ngOnInit() {
     this.getStudents();
     this.form = new FormGroup({
-      username: new FormControl('', Validators.required),
-      year: new FormControl('', Validators.required),
-      quarter: new FormControl('', Validators.required)
+      studentId: new FormControl('', Validators.required),
+      year: new FormControl(2018, Validators.required),
+      quarter: new FormControl('spring', Validators.required)
     });
 
-    this.courseData = {};
-
-    this.rawSchedule = [
-      { courseId: 'csse433', offeringId: 'offeringKey1' },
-      { courseId: 'csse333', offeringId: 'offeringKey2' },
-    ];
-
-    this.courseData['offeringKey1'] = {
-      enrolled: 0,
-      capacity: 0,
-      hour: 2,
-      days: [0, 2, 3],
-      prof: '',
-      name: 'csse433',
-    };
-
-    this.courseData['offeringKey2'] = {
-      enrolled: 0,
-      capacity: 0,
-      hour: 4,
-      days: [1, 4],
-      prof: '',
-      name: 'csse333',
-    };
-
-    const sched = [
-      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
-      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
-      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
-      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
-      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
-    ];
-
-    // tslint:disable-next-line:forin
-    for (const course in this.courseData) {
-      const data = this.courseData[course];
-      // tslint:disable-next-line:forin
-      for (const day in data.days) {
-        const num = data.days[day];
-        sched[num][data.hour] = data.name;
+    this.form.valueChanges.subscribe(data => {
+      if (this.form.valid) {
+        this.buildSchedule(data);
       }
-    }
-
-    this.schedule = new MatTableDataSource(sched);
+    });
 
     this.students = [];
     this.years = [2017, 2018, 2019, 2020];
@@ -87,10 +48,67 @@ export class LookupComponent implements OnInit {
     ];
   }
 
+  private buildSchedule(data) {
+    const sched = [
+      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
+      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
+      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
+      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
+      { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 10: '' },
+    ];
+
+    this.http.get(`${environment.flaskRoot}/lookup/${data.studentId}/${data.quarter}${data.year}`).subscribe(resp => {
+      const respData = JSON.parse(resp['_body']);
+      console.log(respData);
+      this.rawSchedule = respData.offerings;
+      const offeringCallbacks = [];
+      for (const courseNum in this.rawSchedule) {
+        offeringCallbacks.push(this.db.getOfferings(courseNum, data.quarter + data.year, this.rawSchedule[courseNum]));
+      }
+      Promise.all(offeringCallbacks).then(offeringResponses => {
+        this.courseData = {};
+        for (const off in offeringResponses) {
+          this.courseData[offeringResponses[off].courseNum] = offeringResponses[off];
+        }
+
+        for (const course in this.courseData) {
+          const c = this.courseData[course];
+          for (const day in c.days) {
+            const num = c.days[day];
+            sched[num][c.hour] = c.courseNum;
+          }
+        }
+        this.schedule = new MatTableDataSource(sched);
+      }).catch(err => {
+        console.error(err);
+      });
+    }, err => {
+      console.error(err);
+    });
+
+  }
+
   getStudents() {
     this.db.getStudents().then(students => {
       this.students = students.map(val => val.username);
     });
   }
 
+  dropClass(classData: { value: string, '$fromKey': string }) {
+    const formVal = this.form.value;
+    const quarterId = formVal.quarter + formVal.year;
+    this.http.delete(`${environment.flaskRoot}/register`, {
+      body: {
+        quarterId,
+        courseNum: classData.$fromKey,
+        offeringId: classData.value,
+        studentId: formVal.studentId
+      }
+    }).subscribe(resp => {
+      console.log(resp);
+      this.buildSchedule(formVal);
+    }, err => {
+      console.error(err);
+    });
+  }
 }

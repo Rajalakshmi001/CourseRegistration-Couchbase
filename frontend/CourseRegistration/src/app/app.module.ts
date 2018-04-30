@@ -27,6 +27,7 @@ import { NotificationService } from './services/notification/notification.servic
 import { HomeComponent } from './pages/home/home.component';
 import { InfoMessageComponent } from './components/info-message/info-message.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { KeysPipe } from './keys/keys.pipe';
 
 const matImports = [
   MatSelectModule,
@@ -54,6 +55,7 @@ const matImports = [
     LookupComponent,
     HomeComponent,
     InfoMessageComponent,
+    KeysPipe,
   ],
   imports: [
     BrowserModule,

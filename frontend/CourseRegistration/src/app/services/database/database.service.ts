@@ -39,9 +39,9 @@ export class DatabaseService {
     });
   }
 
-  public getOfferings(courseNum: String, quarter: String): Promise<Offering[]> {
+  public getOfferings(courseNum: String, quarter: String, offeringId: String = ''): Promise<Offering[]> {
     return new Promise((resolve, reject) => {
-      this.http.get(`${environment.flaskRoot}/offering/${quarter}/${courseNum}`).subscribe(data => {
+      this.http.get(`${environment.flaskRoot}/offering/${quarter}/${courseNum}${offeringId ? '/' + offeringId : ''}`).subscribe(data => {
         if (data.status === 200) {
           const resp: Offering[] = JSON.parse(data['_body']);
           resolve(resp);
