@@ -42,6 +42,8 @@ export class CreateUserComponent implements OnInit {
     }, err => {
       if (err.status === 304) {
         this.notificationService.showSnackbar('Username already exists :(');
+      } else {
+        this.notificationService.showSnackbar('An unkown error occured :(');
       }
     });
   }
