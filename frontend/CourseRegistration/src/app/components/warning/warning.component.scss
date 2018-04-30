@@ -1,0 +1,22 @@
+div {
+  border-radius: 10px;
+  padding: 20px 30px;
+  background-color: #eaf2ff;
+  border: 1px solid #b0d0ff;
+  color: #353535;
+  &.warning {
+    background-color: #ffffea;
+    border: 1px solid #f1f100;
+    color: #353535;
+  }
+  &.error {
+    background-color: #ffeaea;
+    border: 1px solid #f10000;
+    color: #000000;
+  }
+  &.success {
+    background-color: #eaffef;
+    border: 1px solid #00f131;
+    color: #000000;
+  }
+}
