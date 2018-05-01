@@ -11,7 +11,7 @@ sched_bucket = cluster.open_bucket('schedules')
 
 
 @pull_flask_args
-def register_main(studentId=None, quarterId=None, courseNum=None, offeringId=None):
+def register_main(studentId, quarterId, courseNum, offeringId):
     method_map = {"PUT": registerPut, "DELETE": registerDelete}
     
     if not (studentId and quarterId and courseNum and offeringId):
@@ -20,25 +20,23 @@ def register_main(studentId=None, quarterId=None, courseNum=None, offeringId=Non
     return method_map[request.method](studentId, quarterId, courseNum, offeringId)
 
 
-# @catch_already_exists
-# @catch_missing
+@catch_already_exists
 def registerPut(studentId, quarterId, courseNum, offeringId):
     # get offering
     try:
-        offering = off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId))
+        offering = list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0]
     except (SubdocPathNotFoundError, NotFoundError) as err:
         return make_response("Offering does not exist", 400)
 
     # get student
     try:
-        assert get_user(userId)
+        assert get_user(studentId)
     except:
-        return make_response("User does not exist", 400)
-
+        return make_response("User {} does not exist".format(studentId), 400)
     num_enrolled = offering['enrolled']
     capacity = offering['capacity']
     if num_enrolled >= capacity:
-        return make_response("Class is full/maximum capacity reached", 400)
+        return make_response("Class is full/maximum capacity reached", 403)
     
     # make schedule entry if it doesn't exist
     try:
@@ -46,7 +44,7 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
     except:
         pass
     sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.insert('offerings.'+courseNum, offeringId, create_parents=True))
-    print("here", off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1)))
+    off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
     return make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
 
 
@@ -54,8 +52,13 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
 def registerDelete(studentId, quarterId, courseNum, offeringId):
     class_str = "{}: {}-{}".format(quarterId, courseNum, offeringId)
     try:
-        sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.remove('offerings.'+courseNum))  # will throw exception if user is not registered for course
+        unregister(studentId, quarterId, courseNum, offeringId)
     except SubdocPathNotFoundError:
         return make_response(studentId + " was not registered for " + class_str, 400)
     off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', -1))
     return make_response("Un-registered "+studentId+ " from "+class_str)
+
+
+def unregister(studentId, quarterId, courseNum, offeringId):
+    sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.remove('offerings.'+courseNum))  # will throw exception if user is not registered for course
+    return True
