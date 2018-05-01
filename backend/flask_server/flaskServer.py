@@ -5,30 +5,39 @@ from db import courses,users,offerings,quarters,professors,registration
 
 app = Flask(__name__)
 
+ALL_METHODS = ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS']
+GET,PUT,POST,DELETE,OPTIONS = ALL_METHODS
+
 
 @app.route('/')
 @crossdomain(origin='*', methods=['GET'], headers=['content-type'])
 def hello():
     return 'root'
 
-@app.route('/user', methods=['GET', 'OPTIONS'])
-@app.route('/user/<userId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
+
+@app.route('/user', methods=ALL_METHODS)
+@app.route('/users', methods=['GET', 'OPTIONS'])  # to get all users. Same as GET /user
+@app.route('/user/<userId>', methods=['GET', 'PUT', 'POST' , 'DELETE' , 'OPTIONS'])  # TODO: remove PUT
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 def user(userId=None):
     return users.user_main(userId)
 
 
-@app.route('/course', methods=['GET', 'PUT'])
-@app.route('/course/<courseId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])
+@app.route('/course', methods=ALL_METHODS)
+@app.route('/courses', methods=['GET'])  # to get all courses. Same as GET /course
+@app.route('/course/<courseId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])  # TODO: remove PUT
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 def course(courseId=None):
     return courses.course_main(courseId)
 
 
-@app.route('/offering')
-@app.route('/offering/<quarterId>', methods=['GET'])
-@app.route('/offering/<quarterId>/<courseId>', methods=['GET'])
-@app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])
+@app.route('/offering', methods=ALL_METHODS)  # all offerings
+@app.route('/offerings', methods=[GET])  # same as above
+@app.route('/offering/<quarterId>', methods=['GET'])  # all offerings for a quarter
+@app.route('/offerings/<quarterId>', methods=['GET'])  # same as above
+@app.route('/offering/<quarterId>/<courseId>', methods=[GET, DELETE])  # all offerings for a course in a quarter
+@app.route('/offerings/<quarterId>/<courseId>', methods=[GET, DELETE])  # same as above
+@app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])  # specific offering
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 def offering(quarterId=None, courseId=None, sectionId=None):
     return offerings.offering_main(quarterId, courseId, sectionId)
