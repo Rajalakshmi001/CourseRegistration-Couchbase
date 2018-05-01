@@ -1,6 +1,10 @@
 import requests, json, os
 from requests import Response
 from time import sleep
+from functools import partial
+
+
+print = partial(print, flush=True)
 
 
 DO_LOCAL = not os.getenv("CI")
@@ -17,7 +21,8 @@ def delete(path):
 
 
 def put(path, data):
-    print("---------------- PUT")
+    print("---------------- PUT", path)
+    print("\t", data)
     r = requests.put(path, json=data)  # type: Response
     print(r.status_code, r.text)
     sleep(1)

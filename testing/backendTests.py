@@ -1,5 +1,6 @@
 from test_methods import test_all, delete, uri
-
+from functools import partial
+print = partial(print, flush=True)
 
 def test_users():
     print(">>> Testing users")
