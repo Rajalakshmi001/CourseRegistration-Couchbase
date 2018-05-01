@@ -64,4 +64,4 @@ def offeringPost(quarter, courseNum, sectionId):
 def offeringDelete(quarter, courseNum, sectionId):
     sec = ("." + sectionId) if sectionId else ''
     offering_bucket.mutate_in(quarter, subdoc.remove(courseNum + sec))
-    return make_response("Deleted", 204)
+    return make_response("Deleted", 200)
