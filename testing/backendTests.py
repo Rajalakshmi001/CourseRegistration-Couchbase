@@ -25,10 +25,10 @@ def test_courses():
 def test_offerings():
     print(">>> Testing offerings")
     delete(uri('/quarter/Summer2000'))
-    test_offering_data = dict(professor="TEST_PROF", sectionId="01", courseId="OTestCourse", quarterId="Summer2000")
+    test_offering_data = dict(professor="TEST_PROF", offeringId="01", courseNum="OTestCourse", quarter="Summer2000", capacity=0, enrolled=0)
     test_offering_path = "/offering/Summer2000/OTestCourse/01"
     others = [["/offering/Summer2000/OTestCourse/02", 
-                dict(professor="SECOND_TEST_PROF", sectionId="02", courseId="OTestCourse", quarterId="Summer2000")]]
+                dict(professor="SECOND_TEST_PROF", offeringId="02", courseNum="OTestCourse", quarter="Summer2000", capacity=0, enrolled=0)]]
     test_all(test_offering_data, test_offering_path, "/offering/Summer2000/OTestCourse", others)
     delete(uri('/quarter/Summer2000'))
 

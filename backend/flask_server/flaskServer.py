@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory
 from flask_server.crossorigin import crossdomain
-from db import courses,users,offerings,quarters,professors,registration
+from db import courses,users,offerings,quarters,professors,registration,schedules
 
 
 app = Flask(__name__)
@@ -33,14 +33,14 @@ def course(courseId=None):
 
 @app.route('/offering', methods=ALL_METHODS)  # all offerings
 @app.route('/offerings', methods=[GET])  # same as above
-@app.route('/offering/<quarterId>', methods=['GET'])  # all offerings for a quarter
-@app.route('/offerings/<quarterId>', methods=['GET'])  # same as above
-@app.route('/offering/<quarterId>/<courseId>', methods=[GET, DELETE])  # all offerings for a course in a quarter
-@app.route('/offerings/<quarterId>/<courseId>', methods=[GET, DELETE])  # same as above
-@app.route('/offering/<quarterId>/<courseId>/<sectionId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])  # specific offering
+@app.route('/offering/<quarter>', methods=['GET'])  # all offerings for a quarter
+@app.route('/offerings/<quarter>', methods=['GET'])  # same as above
+@app.route('/offering/<quarter>/<courseNum>', methods=[GET, DELETE])  # all offerings for a course in a quarter
+@app.route('/offerings/<quarter>/<courseNum>', methods=[GET, DELETE])  # same as above
+@app.route('/offering/<quarter>/<courseNum>/<offeringId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])  # specific offering
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
-def offering(quarterId=None, courseId=None, sectionId=None):
-    return offerings.offering_main(quarterId, courseId, sectionId)
+def offering(quarter=None, courseNum=None, offeringId=None):
+    return offerings.offering_main(quarter, courseNum, offeringId)
 
 
 @app.route('/professor/<professorId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
@@ -60,15 +60,16 @@ def getRecommendations(userId):
     pass
 
 
-@app.route('/register', methods=['PUT', 'POST', 'DELETE', 'OPTIONS'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
-def registerForCourse():
+@app.route('/register', methods=['PUT', 'DELETE', 'OPTIONS'])
+@crossdomain(origin='*', methods=['PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+def registerForCourse(studentId=None, quarterId=None, courseNum=None, offeringId=None):
     return registration.register_main()
+
 
 @app.route('/lookup/<studentId>/<quarterId>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
 def scheduleLookup(studentId, quarterId):
-    return registration.registerGet(studentId, quarterId)
+    return schedules.get_user_schedule(studentId, quarterId)
 
 
 @app.route('/generateSchedules/', methods=['POST'])
@@ -78,5 +79,5 @@ def generateSchedules():
 
 
 if __name__ == '__main__':
-    print("You are running flaskServer.py directly; it will probably fail")
+    print("You are running flaskServer.py directly; it will probably fail. Use run.py instead.")
     app.run(host='0.0.0.0', port=5005)
