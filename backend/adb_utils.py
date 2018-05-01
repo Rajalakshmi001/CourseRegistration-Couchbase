@@ -62,6 +62,6 @@ def pull_flask_args(function):
         def val(key):
             return __get(req_data, key) or __get(kwargs, key) or __get(ad, key) or None
         new_kwa = {key: val(key) for key in arg_names}
-        print(new_kwa)     
+        print(request.method, request.url, new_kwa)     
         return function(**new_kwa)
     return wrapper
