@@ -4,6 +4,7 @@ import couchbase.subdocument as subdoc
 from couchbase.exceptions import SubdocPathNotFoundError, NotFoundError
 from adb_utils import pull_flask_args, catch_missing, require_json_data, catch_already_exists, json_response
 from db.offerings import offeringGet
+from db.users import get_user
 
 off_bucket = cluster.open_bucket('offerings')
 sched_bucket = cluster.open_bucket('schedules')
@@ -22,16 +23,24 @@ def register_main(studentId=None, quarterId=None, courseNum=None, offeringId=Non
 # @catch_already_exists
 # @catch_missing
 def registerPut(studentId, quarterId, courseNum, offeringId):
-    print("in register put with", studentId, quarterId, courseNum, offeringId)
+    # get offering
     try:
         offering = off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId))
-    except (SubdocPathNotFoundError, NotFoundError):
+    except (SubdocPathNotFoundError, NotFoundError) as err:
         return make_response("Offering does not exist", 400)
+
+    # get student
+    try:
+        assert get_user(userId)
+    except:
+        return make_response("User does not exist", 400)
 
     num_enrolled = offering['enrolled']
     capacity = offering['capacity']
     if num_enrolled >= capacity:
         return make_response("Class is full/maximum capacity reached", 400)
+    
+    # make schedule entry if it doesn't exist
     try:
         sched_bucket.insert(studentId+"-"+quarterId, {"studentId": studentId, "quarterId": quarterId})
     except:
