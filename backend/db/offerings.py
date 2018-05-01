@@ -2,18 +2,20 @@ from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 from couchbase.result import SubdocResult
 import couchbase.subdocument as subdoc
-from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response, flatten_subdoc_result
+from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response, flatten_subdoc_result, pull_flask_args
 from db.quarters import quarterPut as upsert_quarter, quarterGet as get_for_quarter
 
 offering_bucket = cluster.open_bucket('offerings')
 
 
 @catch_missing
+@pull_flask_args
 def offering_main(quarterId, courseId, sectionId):
+    print(quarterId, courseId, sectionId)
     method_map = {"GET": offeringGet, "PUT": offeringPut, "POST": offeringPost, "DELETE": offeringDelete}
     if request.method not in method_map:
         raise NotImplementedError("Method {} not implemented for offerings".format(request.method))
-    
+
     return method_map[request.method](quarterId, courseId, sectionId)
 
 
