@@ -17,10 +17,10 @@ def hello():
 
 @app.route('/user', methods=ALL_METHODS)
 @app.route('/users', methods=['GET', 'OPTIONS'])  # to get all users. Same as GET /user
-@app.route('/user/<userId>', methods=['GET', 'PUT', 'POST' , 'DELETE' , 'OPTIONS'])  # TODO: remove PUT
+@app.route('/user/<username>', methods=['GET', 'PUT', 'POST' , 'DELETE' , 'OPTIONS'])  # TODO: remove PUT
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
-def user(userId=None):
-    return users.user_main(userId)
+def user(username=None):
+    return users.user_main(username)
 
 
 @app.route('/course', methods=ALL_METHODS)
