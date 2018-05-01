@@ -22,24 +22,24 @@ def offeringGet(quarter, courseNum, sectionId):
     if not sectionId:
         if not courseNum:
             if not quarter:
-                return all_offerings()
+                return json_response(all_offerings())
             return get_for_quarter(quarter)
-        return get_course_sections(quarter, courseNum)
-    return get_single_offering(quarter, courseNum, sectionId)
+        return json_response(get_course_sections(quarter, courseNum))
+    return json_response(get_single_offering(quarter, courseNum, sectionId))
     
 def all_offerings():
     all_nested = list(quarter['offerings'] for quarter in offering_bucket.n1ql_query('select * from offerings'))    
-    return json_response(flatten_subdoc_result(all_nested, 2)) 
+    return flatten_subdoc_result(all_nested, 2)
 
 def __offering_lookup_helper(qId, path):
     ob_data = offering_bucket.lookup_in(qId, subdoc.get(path))  # type: SubdocResult
     return ob_data[0]
 
 def get_course_sections(quarter, courseNum):
-    return json_response(list(__offering_lookup_helper(quarter, courseNum).values()))
+    return list(__offering_lookup_helper(quarter, courseNum).values())
 
 def get_single_offering(quarter, courseNum, sectionId):
-    return json_response(__offering_lookup_helper(quarter, courseNum+'.'+sectionId))
+    return __offering_lookup_helper(quarter, courseNum+'.'+sectionId)
 
 
 @catch_already_exists
