@@ -54,7 +54,7 @@ def flatten_subdoc_result(lod, levels=2):
 def pull_flask_args(function):
     arg_names = inspect.getfullargspec(function).args
     @functools.wraps(function)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs):   
         req_data = (request.data and request.get_json()) or dict()
         ad = dict(zip(arg_names, args))
         def __get(dictionary, key):
@@ -62,6 +62,10 @@ def pull_flask_args(function):
         def val(key):
             return __get(req_data, key) or __get(kwargs, key) or __get(ad, key) or None
         new_kwa = {key: val(key) for key in arg_names}
-        print(request.method, request.url, new_kwa)     
+        print(request.method, request.url, new_kwa) 
+        if request.method in ['PUT', 'POST']:
+            for arg in arg_names:
+                if arg not in req_data:
+                    return make_response("Missing '{}' for {}".format(arg, request.method), 400)
         return function(**new_kwa)
     return wrapper
