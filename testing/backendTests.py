@@ -1,4 +1,4 @@
-from test_methods import test_all, delete, uri
+from test_methods import test_all, delete, uri, put
 from functools import partial
 print = partial(print, flush=True)
 
@@ -11,6 +11,10 @@ def test_users():
             name='test user')
 
     test_all(test_user_data, test_user_path, all_user_path)
+
+    print("User without username should fail")
+    assert 400 <= put(uri(test_user_path), {"no username": "should fail"}) < 500
+    
     print("\n>> Done testing users\n\n")
 
 
