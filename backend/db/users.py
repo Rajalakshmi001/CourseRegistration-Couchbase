@@ -1,43 +1,45 @@
 from flask import Flask, request, Response, json, make_response
 import db.couchbase_server as cb
-from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
+from adb_utils import catch_missing, catch_already_exists, json_response, pull_flask_args
 
 user_bucket = cb.cluster.open_bucket('users')
 
 
-@catch_missing
-def user_main(userId):
+@pull_flask_args
+def user_main(username):
     method_map = {"GET": userGet, "PUT": userPut, "POST": userPost, "DELETE": userDelete}
-    if request.method not in method_map:
-        raise NotImplementedError("Method {} not implemented for users".format(request.method))
+    try:
+        return method_map[request.method](username)
+    except AssertionError:
+        return make_response("Must include username", 400)
 
-    print(request.get_json())
-
-    return method_map[request.method](userId)
-
-
-def userGet(userId):
-    if not userId:
+def userGet(username):
+    if not username:
         # return all users
         return json_response(list(user_bucket.n1ql_query('select username,name from users')))
     
-    return json_response(user_bucket.get(userId, quiet=True).value)  # type: ValueResult
+    return json_response(get_user(username))  # type: ValueResult
     
 
-@require_json_data
+def get_user(username):
+    return user_bucket.get(username, quiet=True).value
+
+
 @catch_already_exists
-def userPut(userId):
+def userPut(username):
     data = request.get_json()
-    user_bucket.insert(userId, request.get_json())  # type: OperationResult
-    return make_response('User ' + userId + ' inserted', 201)
+    user_bucket.insert(username, data)  # type: OperationResult
+    return make_response('User ' + username + ' inserted', 201)
 
 
-def userPost(userId):
+@catch_missing
+def userPost(username):
     data = request.get_json()
-    opres = user_bucket.replace(userId, request.get_json())  # type: OperationResult
+    opres = user_bucket.replace(username, data)  # type: OperationResult
     return make_response('Document updated: ' + opres.success, 200)
  
 
-def userDelete(userId):
-    del_res = user_bucket.remove(userId)  # type: OperationResult
+@catch_missing
+def userDelete(username):
+    del_res = user_bucket.remove(username)  # type: OperationResult
     return make_response('Deletion value {}, success {}'.format(del_res.value, del_res.success))
