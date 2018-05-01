@@ -57,14 +57,11 @@ def pull_flask_args(function):
     def wrapper(*args, **kwargs):
         req_data = (request.data and request.get_json()) or dict()
         ad = dict(zip(arg_names, args))
-        for key in arg_names:
-            if key not in kwargs:
-                if key in ad: 
-                    kwargs[key] = ad[key]
-                elif key in req_data:
-                    kwargs[key] = req_data[key]
-                else:
-                    kwargs[key] = None
-        
-        return function(**kwargs)
+        def __get(dictionary, key):
+            return dictionary[key] if key in dictionary else None
+        def val(key):
+            return __get(req_data, key) or __get(kwargs, key) or __get(ad, key) or None
+        new_kwa = {key: val(key) for key in arg_names}
+        print(new_kwa)     
+        return function(**new_kwa)
     return wrapper
