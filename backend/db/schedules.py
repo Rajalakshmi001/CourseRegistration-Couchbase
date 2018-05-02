@@ -8,7 +8,7 @@ import db.registration as registration
 
 
 sched_bucket = cluster.open_bucket('schedules')
-sched_bucket.timeout = 5.00
+sched_bucket.timeout = 2.500
 
 
 @catch_missing

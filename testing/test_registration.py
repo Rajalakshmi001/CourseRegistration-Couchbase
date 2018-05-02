@@ -39,6 +39,7 @@ def reg_tests():
         assert(put(reg_uri, rr) >= 300)
         go = get(off_uri)
         assert go['enrolled'] == i+1
+        sleep(1)
         user_sched, code = get(uri('/lookup/'+user['username']+'/'+rr['quarterId']), True)
         assert code < 300
         user_offerings = user_sched['offerings']
