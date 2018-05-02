@@ -42,7 +42,7 @@ def reg_tests():
         # sleep(10)
         assert go['enrolled'] == i+1
 
-    assert put(reg_uri, reg_request(user3)) >= 300
+    assert put(reg_uri, reg_request(user3)) >= 400
     assert get(off_uri)['enrolled'] == 2
     
     print("\n>> Done testing courses\n\n")
