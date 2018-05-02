@@ -78,6 +78,13 @@ def generateSchedules():
     pass
 
 
+@app.route('/logs', methods=['GET'])
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
+def getLogs():
+    with open('adb.log', 'r') as log_file:
+        return Response(response=log_file.read(), status=200, )
+
+
 if __name__ == '__main__':
     print("You are running flaskServer.py directly; it will probably fail. Use run.py instead.")
     app.run(host='0.0.0.0', port=5005)
