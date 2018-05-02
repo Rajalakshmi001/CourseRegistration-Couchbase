@@ -19,8 +19,8 @@ def reg_tests():
 
     # delete, add offering
     off_uri = uri('/'.join(('/offering', quarter, t_o['courseNum'], t_o['offeringId'])))
-    delete(off_uri) #(uri('/offering/' + quarter +'/'+test_offering['courseNum']))
-    assert 201 == put(uri('/offering'), test_offering)
+    delete(off_uri)
+    assert 201 == put(uri('/offering'), t_o)
     get(off_uri)
     # sleep(10)
     # delete, add users

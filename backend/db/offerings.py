@@ -44,6 +44,7 @@ def get_single_offering(quarter, courseNum, sectionId):
 
 @catch_already_exists
 def offeringPut(quarter, courseNum, sectionId):
+    # TODO: make redis call
     if not (quarter and courseNum and sectionId):
         return make_response("Missing a parameter. Need quarter, courseNum, sectionId", 400)
     upsert_quarter(quarter)
@@ -55,6 +56,7 @@ def offeringPut(quarter, courseNum, sectionId):
 
 
 def offeringPost(quarter, courseNum, sectionId):
+    # TODO: make redis call
     if not (quarter and courseNum and sectionId):
         return make_response("Missing a parameter. Need quarter, courseNum, sectionId", 400)
     offering_bucket.mutate_in(quarter, subdoc.replace(courseNum+"."+sectionId, request.get_json()))
@@ -62,6 +64,7 @@ def offeringPost(quarter, courseNum, sectionId):
 
 
 def offeringDelete(quarter, courseNum, sectionId):
+    # TODO: make redis call
     sec = ("." + sectionId) if sectionId else ''
     offering_bucket.mutate_in(quarter, subdoc.remove(courseNum + sec))
     return make_response("Deleted", 200)
