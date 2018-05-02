@@ -32,7 +32,10 @@ def put(path, data):
 def get(path):
     print("---------------- GET", path)
     r = requests.get(path)  # type: Response
-    returned = r.json() if r.content else None
+    try:
+        returned = r.json() if r.content else None
+    except:
+        raise Exception("JSON decode failed", r.content)
     print(r.status_code, "GET returned:", returned)
     return returned
 

@@ -2,7 +2,7 @@ from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
 from couchbase.result import SubdocResult
-from couchbase.exceptions import SubdocPathNotFoundError, NotFoundError
+from couchbase.exceptions import SubdocPathNotFoundError, NotFoundError, TimeoutError
 from adb_utils import pull_flask_args, catch_missing, require_json_data, catch_already_exists, json_response
 from db.offerings import offeringGet
 import db.users
@@ -29,6 +29,8 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
         offering = list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0]
     except (SubdocPathNotFoundError, NotFoundError) as err:
         return make_response("Offering does not exist", 400)
+    except TimeoutError:
+        return make_response("offering lookup failed. quarter {}, coursenum {}, offering {}".format(quarterId, courseNum, offeringId), 500)
 
     # get student
     try:
