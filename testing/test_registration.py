@@ -39,7 +39,8 @@ def reg_tests():
         assert(put(reg_uri, rr) >= 300)
         go = get(off_uri)
         assert go['enrolled'] == i+1
-        user_sched = get(uri('/lookup/'+user['username']+'/'+rr['quarterId']))
+        user_sched, code = get(uri('/lookup/'+user['username']+'/'+rr['quarterId']), True)
+        assert code < 300
         user_offerings = user_sched['offerings']
         assert courseNum in user_offerings
         assert user_offerings[courseNum] == rr['offeringId']

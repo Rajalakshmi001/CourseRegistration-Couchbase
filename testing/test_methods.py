@@ -29,7 +29,7 @@ def put(path, data):
     return r.status_code
 
 
-def get(path):
+def get(path, include_code=False):
     print("---------------- GET", path)
     r = requests.get(path)  # type: Response
     try:
@@ -37,6 +37,8 @@ def get(path):
     except:
         raise Exception("JSON decode failed", r.content)
     print(r.status_code, "GET returned:", returned)
+    if include_code:
+        return [returned, r.status_code]
     return returned
 
 
