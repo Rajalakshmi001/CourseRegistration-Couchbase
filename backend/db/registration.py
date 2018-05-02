@@ -56,9 +56,9 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
     sched_bucket.mutate_in(sched_key, subdoc.insert('offerings.'+courseNum, offeringId, create_parents=True))
 
     incr = off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
-    print("increment enrolled:", list(incr))
-    cv = off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId+'.enrolled'))  # type: SubdocResult
-    print("now it's", list(cv))
+    print("Increment enrollment count to:", list(incr)[0])
+    # cv = off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId+'.enrolled'))  # type: SubdocResult
+    # print("now it's", list(cv))
     # print(list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0])
 
     return make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
@@ -77,7 +77,7 @@ def registerDelete(studentId, quarterId, courseNum, offeringId):
 def unregister(studentId, quarterId, courseNum, offeringId):
     sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.remove('offerings.'+courseNum))  # will throw exception if user is not registered for course
     decr = list(off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', -1)))[0]
-    print("decrement result", decr)
+    print("Decremented enrollment count to:", decr)
     if decr < 0:
         print("Reset to zero:", list(off_bucket.mutate_in(quarterId, subdoc.upsert(courseNum+'.'+offeringId+'.enrolled', 0))))
 

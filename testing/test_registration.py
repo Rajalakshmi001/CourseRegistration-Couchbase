@@ -22,7 +22,6 @@ def reg_tests():
     delete(off_uri) #(uri('/offering/' + quarter +'/'+test_offering['courseNum']))
     assert 201 == put(uri('/offering'), test_offering)
     get(off_uri)
-    print("Go look at offerings")
     # sleep(10)
     # delete, add users
     for user in [user1, user2, user3]:
@@ -37,15 +36,14 @@ def reg_tests():
         assert(put(reg_uri, rr) == 201)
         get(off_uri)
         assert(put(reg_uri, rr) >= 300)
-        print("Check offering, just registered user")
         go = get(off_uri)
         # sleep(10)
         assert go['enrolled'] == i+1
 
     assert put(reg_uri, reg_request(user3)) >= 400
-    assert get(off_uri)['enrolled'] == 2
+    assert get(off_uri)['enrolled'] == i+1
     
-    print("\n>> Done testing courses\n\n")
+    print("\n>> Done testing registration\n\n")
 
 
 if __name__ == '__main__':
