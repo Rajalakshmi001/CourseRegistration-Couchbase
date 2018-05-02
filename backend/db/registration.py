@@ -1,9 +1,9 @@
-from flask import Flask, request, Response, json, make_response
+from flask import Flask, request, Response, json
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
 from couchbase.result import SubdocResult
 from couchbase.exceptions import SubdocPathNotFoundError, NotFoundError, TimeoutError
-from adb_utils import pull_flask_args, catch_missing, require_json_data, catch_already_exists, json_response
+from adb_utils import pull_flask_args, catch_missing, require_json_data, catch_already_exists, json_response, log_make_response
 from db.offerings import offeringGet
 import db.users
 
@@ -16,7 +16,7 @@ def register_main(studentId, quarterId, courseNum, offeringId):
     method_map = {"PUT": registerPut, "DELETE": registerDelete}
     
     if not (studentId and quarterId and courseNum and offeringId):
-        return make_response("Missing a param", 400)
+        return log_make_response("Missing a param", 400)
 
     return method_map[request.method](studentId, quarterId, courseNum, offeringId)
 
@@ -27,25 +27,26 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
     try:
         offering = list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0]
     except (SubdocPathNotFoundError, NotFoundError) as err:
-        return make_response("Offering does not exist", 400)
+        return log_make_response("Offering does not exist", 400)
     except TimeoutError:
-        return make_response("offering lookup failed. quarter {}, coursenum {}, offering {}".format(quarterId, courseNum, offeringId), 500)
+        return log_make_response("offering lookup failed. quarter {}, coursenum {}, offering {}".format(quarterId, courseNum, offeringId), 500)
 
     # get student
     try:
         assert db.users.get_user(studentId)
     except:
-        return make_response("User {} does not exist".format(studentId), 400)
+        return log_make_response("User {} does not exist".format(studentId), 400)
     try:
-        assert list(sched_bucket.lookup_in(sched_key, subdoc.get('offerings.'+courseNum)))
-        return make_response("User already enrolled in course", 304)
+        assert len(list(sched_bucket.lookup_in(sched_key, subdoc.get('offerings.'+courseNum))))
+        return log_make_response("User already enrolled in course", 304)  # type: Response
     except Exception as e:
+        # print("User not enrolled:", e)
         pass
 
     num_enrolled = offering['enrolled']
     capacity = offering['capacity']
     if num_enrolled >= capacity:
-        return make_response("Class is full/maximum capacity reached", 403)
+        return log_make_response("Class is full/maximum capacity reached", 403)
     
     # make user's schedule entry for that quarter if it doesn't exist
     try:
@@ -57,7 +58,7 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
 
     incr = off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
     print("Increment enrollment count to:", list(incr)[0])
-    return make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
+    return log_make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
 
 
 @catch_missing
@@ -66,8 +67,8 @@ def registerDelete(studentId, quarterId, courseNum, offeringId):
     try:
         unregister(studentId, quarterId, courseNum, offeringId)
     except SubdocPathNotFoundError:
-        return make_response(studentId + " was not registered for " + class_str, 400)
-    return make_response("Un-registered "+studentId+ " from "+class_str)
+        return log_make_response(studentId + " was not registered for " + class_str, 400)
+    return log_make_response("Un-registered "+studentId+ " from "+class_str)
 
 
 def unregister(studentId, quarterId, courseNum, offeringId):

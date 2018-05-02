@@ -69,3 +69,9 @@ def pull_flask_args(function):
                     return make_response("Missing '{}' for {}".format(arg, request.method), 400)
         return function(**new_kwa)
     return wrapper
+
+
+def log_make_response(*args, **kwargs):
+    resp = make_response(*args, **kwargs)  # type: Response
+    print(resp.status_code, resp.get_data(True))
+    return resp
