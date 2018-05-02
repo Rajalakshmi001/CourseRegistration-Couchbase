@@ -1,6 +1,7 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory, make_response
 from flask_server.crossorigin import crossdomain
 from db import courses,users,offerings,quarters,professors,registration,schedules
+from adb_utils import catch_return_exceptions
 
 
 app = Flask(__name__)
@@ -11,6 +12,7 @@ GET,PUT,POST,DELETE,OPTIONS = ALL_METHODS
 
 @app.route('/')
 @crossdomain(origin='*', methods=['GET'], headers=['content-type'])
+@catch_return_exceptions
 def hello():
     return 'root'
 
@@ -19,6 +21,7 @@ def hello():
 @app.route('/users', methods=['GET', 'OPTIONS'])  # to get all users. Same as GET /user
 @app.route('/user/<username>', methods=['GET', 'PUT', 'POST' , 'DELETE' , 'OPTIONS'])  # TODO: remove PUT
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def user(username=None):
     return users.user_main(username)
 
@@ -27,6 +30,7 @@ def user(username=None):
 @app.route('/courses', methods=['GET'])  # to get all courses. Same as GET /course
 @app.route('/course/<courseId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])  # TODO: remove PUT
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def course(courseId=None):
     return courses.course_main(courseId)
 
@@ -39,35 +43,41 @@ def course(courseId=None):
 @app.route('/offerings/<quarter>/<courseNum>', methods=[GET, DELETE])  # same as above
 @app.route('/offering/<quarter>/<courseNum>/<offeringId>', methods=['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'])  # specific offering
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def offering(quarter=None, courseNum=None, offeringId=None):
     return offerings.offering_main(quarter, courseNum, offeringId)
 
 
 @app.route('/professor/<professorId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def professor(professorId=None):
     professors.professor_main(professorId)
 
 
 @app.route('/quarter/<quarterId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def quarter(quarterId=None):
     return quarters.quarter_main(quarterId)
 
 
 @app.route('/recommend/<userId>', methods=['GET'])
+@catch_return_exceptions
 def getRecommendations(userId):
     pass
 
 
 @app.route('/register', methods=['PUT', 'DELETE', 'OPTIONS'])
 @crossdomain(origin='*', methods=['PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def registerForCourse(studentId=None, quarterId=None, courseNum=None, offeringId=None):
     return registration.register_main()
 
 
 @app.route('/lookup/<studentId>/<quarterId>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def scheduleLookup(studentId, quarterId):
     try:
         return schedules.get_user_schedule(studentId, quarterId)
@@ -78,15 +88,17 @@ def scheduleLookup(studentId, quarterId):
 
 @app.route('/generateSchedules/', methods=['POST'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'], headers=['content-type'])
+@catch_return_exceptions
 def generateSchedules():
     pass
 
 
 @app.route('/logs', methods=['GET'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
 def getLogs():
     with open('adb.log', 'r') as log_file:
-        return Response(response=log_file.read(), status=200, )
+        return Response(response=log_file.read(), status=200)
 
 
 if __name__ == '__main__':

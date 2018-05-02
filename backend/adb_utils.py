@@ -75,3 +75,13 @@ def log_make_response(*args, **kwargs):
     resp = make_response(*args, **kwargs)  # type: Response
     print(resp.status_code, resp.get_data(True))
     return resp
+
+
+def catch_return_exceptions(function):
+    @functools.wraps(function)
+    def wrapper(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except Exception as e:
+            return json_response(dict(type=type(e), message=str(e)), 500)
+    return wrapper
