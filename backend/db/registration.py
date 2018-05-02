@@ -56,10 +56,6 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
 
     incr = off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
     print("Increment enrollment count to:", list(incr)[0])
-    # cv = off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId+'.enrolled'))  # type: SubdocResult
-    # print("now it's", list(cv))
-    # print(list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0])
-
     return make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
 
 
