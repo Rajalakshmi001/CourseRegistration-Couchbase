@@ -1,4 +1,4 @@
-from flask import Flask, request, Response, json, Blueprint, send_from_directory
+from flask import Flask, request, Response, json, Blueprint, send_from_directory, make_response
 from flask_server.crossorigin import crossdomain
 from db import courses,users,offerings,quarters,professors,registration,schedules
 
@@ -69,7 +69,11 @@ def registerForCourse(studentId=None, quarterId=None, courseNum=None, offeringId
 @app.route('/lookup/<studentId>/<quarterId>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
 def scheduleLookup(studentId, quarterId):
-    return schedules.get_user_schedule(studentId, quarterId)
+    try:
+        return schedules.get_user_schedule(studentId, quarterId)
+    except Exception as e:
+        print("Lookup exception:", e)
+        return make_response(str(e), 500)
 
 
 @app.route('/generateSchedules/', methods=['POST'])
