@@ -27,7 +27,6 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
     # get offering
     try:
         offering = list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0]
-        print(offering)
     except (SubdocPathNotFoundError, NotFoundError) as err:
         return make_response("Offering does not exist", 400)
 

@@ -33,15 +33,21 @@ def reg_tests():
                         courseNum=t_o['courseNum'], offeringId=t_o['offeringId'])
     for i,user in enumerate([user1, user2]):
         rr = reg_request(user)
+        courseNum = rr['courseNum']
         assert(put(reg_uri, rr) == 201)
         get(off_uri)
         assert(put(reg_uri, rr) >= 300)
         go = get(off_uri)
-        # sleep(10)
         assert go['enrolled'] == i+1
-
+        user_sched = get(uri('/lookup/'+user['username']+'/'+rr['quarterId']))
+        user_offerings = user_sched['offerings']
+        assert courseNum in user_offerings
+        assert user_offerings[courseNum] == rr['offeringId']
     assert put(reg_uri, reg_request(user3)) >= 400
     assert get(off_uri)['enrolled'] == i+1
+    delete(uri('/quarter/'+rr['quarterId']))
+    for user in [user1, user2, user3]:
+        delete(uri('/user/'+user['username']))
     
     print("\n>> Done testing registration\n\n")
 

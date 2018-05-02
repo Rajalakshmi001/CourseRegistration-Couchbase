@@ -30,7 +30,7 @@ def put(path, data):
 
 
 def get(path):
-    print("---------------- GET")
+    print("---------------- GET", path)
     r = requests.get(path)  # type: Response
     returned = r.json() if r.content else None
     print(r.status_code, "GET returned:", returned)
