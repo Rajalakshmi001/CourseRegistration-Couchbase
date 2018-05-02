@@ -10,8 +10,9 @@ import db.registration as registration
 sched_bucket = cluster.open_bucket('schedules')
 
 
+@catch_missing
 def get_user_schedule(studentId, quarterId):
-    return json_response(sched_bucket.get(studentId+'-'+quarterId, quiet=True).value)
+    return json_response(sched_bucket.get(studentId+'-'+quarterId).value)
 
 
 def all_schedules_for(username):
