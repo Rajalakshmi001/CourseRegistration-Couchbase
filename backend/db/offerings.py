@@ -50,7 +50,7 @@ def offeringPut(quarter, courseNum, sectionId):
     data = request.get_json()
     data['enrolled'] = 0
     data['capacity'] = int(data['capacity']) if 'capacity' in data else 0
-    offering_bucket.mutate_in(quarter, subdoc.insert(courseNum+"."+sectionId, data, create_parents=True))
+    offering_bucket.mutate_in(quarter, subdoc.insert(courseNum+"."+str(sectionId), data, create_parents=True))
     return make_response("Created offering {}/{}-{}".format(quarter, courseNum, sectionId), 201)
 
 
