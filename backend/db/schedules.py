@@ -8,11 +8,12 @@ import db.registration as registration
 
 
 sched_bucket = cluster.open_bucket('schedules')
+sched_bucket.timeout = 5.00
 
 
 @catch_missing
 def get_user_schedule(studentId, quarterId):
-    return json_response(sched_bucket.get(studentId+'-'+quarterId).value)
+    return json_response(sched_bucket.get(studentId+'-'+quarterId, ).value)
 
 
 def all_schedules_for(username):
@@ -30,7 +31,7 @@ def pull_enrollments(schedules):
 
 
 def del_all_scheds_for(username):
-    # from db.registration import unregister  # TODO: guessing there would be an import circle otherwise. Should refactor to get rid of that.
+    # from db.registration import unregister
     schedules = all_schedules_for(username)
     # de-register from all classes
     enrollments = pull_enrollments(schedules)
