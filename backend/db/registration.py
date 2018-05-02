@@ -1,10 +1,11 @@
 from flask import Flask, request, Response, json, make_response
 from db.couchbase_server import *
 import couchbase.subdocument as subdoc 
+from couchbase.result import SubdocResult
 from couchbase.exceptions import SubdocPathNotFoundError, NotFoundError
 from adb_utils import pull_flask_args, catch_missing, require_json_data, catch_already_exists, json_response
 from db.offerings import offeringGet
-from db.users import get_user
+import db.users
 
 off_bucket = cluster.open_bucket('offerings')
 sched_bucket = cluster.open_bucket('schedules')
@@ -22,29 +23,45 @@ def register_main(studentId, quarterId, courseNum, offeringId):
 
 @catch_already_exists
 def registerPut(studentId, quarterId, courseNum, offeringId):
+    sched_key = studentId+"-"+quarterId
     # get offering
     try:
         offering = list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0]
+        print(offering)
     except (SubdocPathNotFoundError, NotFoundError) as err:
         return make_response("Offering does not exist", 400)
 
     # get student
     try:
-        assert get_user(studentId)
+        assert db.users.get_user(studentId)
     except:
         return make_response("User {} does not exist".format(studentId), 400)
+    try:
+        sched_bucket.lookup_in(sched_key, subdoc.get('offerings.'+courseNum))
+        return make_response("User already enrolled in course", 304)
+    except:
+        pass
+
     num_enrolled = offering['enrolled']
     capacity = offering['capacity']
     if num_enrolled >= capacity:
         return make_response("Class is full/maximum capacity reached", 403)
     
-    # make schedule entry if it doesn't exist
+    # make user's schedule entry for that quarter if it doesn't exist
     try:
-        sched_bucket.insert(studentId+"-"+quarterId, {"studentId": studentId, "quarterId": quarterId})
+        sched_bucket.insert(sched_key, {"studentId": studentId, "quarterId": quarterId})
     except:
         pass
-    sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.insert('offerings.'+courseNum, offeringId, create_parents=True))
-    off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
+
+
+    sched_bucket.mutate_in(sched_key, subdoc.insert('offerings.'+courseNum, offeringId, create_parents=True))
+
+    incr = off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
+    print("increment enrolled:", list(incr))
+    cv = off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId+'.enrolled'))  # type: SubdocResult
+    print("now it's", list(cv))
+    print(list(off_bucket.lookup_in(quarterId, subdoc.get(courseNum+'.'+offeringId)))[0])
+
     return make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
 
 
@@ -55,10 +72,14 @@ def registerDelete(studentId, quarterId, courseNum, offeringId):
         unregister(studentId, quarterId, courseNum, offeringId)
     except SubdocPathNotFoundError:
         return make_response(studentId + " was not registered for " + class_str, 400)
-    off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', -1))
     return make_response("Un-registered "+studentId+ " from "+class_str)
 
 
 def unregister(studentId, quarterId, courseNum, offeringId):
     sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.remove('offerings.'+courseNum))  # will throw exception if user is not registered for course
+    decr = list(off_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', -1)))[0]
+    print("decrement result", decr)
+    if decr < 0:
+        print("Reset to zero:", list(off_bucket.mutate_in(quarterId, subdoc.upsert(courseNum+'.'+offeringId+'.enrolled', 0))))
+
     return True

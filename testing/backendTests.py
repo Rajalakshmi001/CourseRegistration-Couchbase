@@ -1,4 +1,5 @@
 from test_methods import test_all, delete, uri, put
+from test_registration import reg_tests as test_reg
 from functools import partial
 print = partial(print, flush=True)
 
@@ -41,5 +42,6 @@ def test_offerings():
 test_users()
 test_courses()
 test_offerings()
+test_reg()
 
 print("\n\n\t\tALL TESTS PASSED")

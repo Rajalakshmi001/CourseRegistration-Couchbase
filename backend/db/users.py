@@ -1,7 +1,6 @@
 from flask import Flask, request, Response, json, make_response
 import db.couchbase_server as cb
 from adb_utils import catch_missing, catch_already_exists, json_response, pull_flask_args
-from db.registration import unregister
 from db.schedules import del_all_scheds_for
 
 user_bucket = cb.cluster.open_bucket('users')
