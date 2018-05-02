@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit {
     data.quarterId = data.quarter + data.year;
     delete data.quarter;
     delete data.year;
-    console.log(data);
+    console.log('PUT -- /register/', data);
     this.http.put(`${environment.flaskRoot}/register`, data).subscribe(resp => {
       if (resp.status >= 200 && resp.status < 300) {
         this.notificationService.showSnackbar(`Successfully registered ${data.studentId} for ${data.courseNum}-${data.offeringId}`);
@@ -84,6 +84,7 @@ export class RegisterComponent implements OnInit {
       if (err.status === 304) {
         this.notificationService.showSnackbar('User is already registered for this course :(');
       } else {
+        console.error(err);
         this.notificationService.showSnackbar('An unknown error occured :(');
       }
     });
