@@ -21,7 +21,6 @@ def register_main(studentId, quarterId, courseNum, offeringId):
     return method_map[request.method](studentId, quarterId, courseNum, offeringId)
 
 
-@catch_already_exists
 def registerPut(studentId, quarterId, courseNum, offeringId):
     sched_key = studentId+"-"+quarterId
     # get offering
@@ -38,9 +37,9 @@ def registerPut(studentId, quarterId, courseNum, offeringId):
     except:
         return make_response("User {} does not exist".format(studentId), 400)
     try:
-        sched_bucket.lookup_in(sched_key, subdoc.get('offerings.'+courseNum))
+        assert list(sched_bucket.lookup_in(sched_key, subdoc.get('offerings.'+courseNum)))
         return make_response("User already enrolled in course", 304)
-    except:
+    except Exception as e:
         pass
 
     num_enrolled = offering['enrolled']
