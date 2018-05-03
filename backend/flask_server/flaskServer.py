@@ -103,7 +103,7 @@ def getLogs():
         return Response(response=log_file.read(), status=200)
 
 
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['content-type'])
 @catch_return_exceptions
 def search_query():
