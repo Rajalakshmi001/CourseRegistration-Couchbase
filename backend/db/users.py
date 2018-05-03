@@ -42,7 +42,6 @@ def userPost(username):
 
 @catch_missing
 def userDelete(username):
-    print(user_bucket.timeout)
     del_res = user_bucket.remove(username)  # type: OperationResult
     del_all_scheds_for(username)
     return json_response(del_res.success)
