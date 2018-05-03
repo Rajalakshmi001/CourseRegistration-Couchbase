@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory, make_response
 from flask_server.crossorigin import crossdomain
-from db import courses,users,offerings,quarters,professors,registration,schedules
+from db import courses,users,offerings,quarters,professors,registration,schedules,search
 from adb_utils import catch_return_exceptions, json_response, catch_missing, pull_flask_args
 
 
@@ -103,7 +103,12 @@ def getLogs():
         return Response(response=log_file.read(), status=200)
 
 
-# @app.route('/search', methods=['POST'])
+@app.route('/search', methods=['POST'])
+@crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
+def search_query():
+    return json_response(search.run_search(**(request.get_json())))
+    
 
 
 if __name__ == '__main__':
