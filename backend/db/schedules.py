@@ -29,7 +29,7 @@ def get_user_schedule(studentId, quarterId):
 def initialize_user_schedule(studentId, quarterId):
     sched_key = studentId+"-"+quarterId
     try:
-        print("INSERTING SCHEDULE FOR", sched_key)
+        print("Initialized schedule", sched_key)
         return sched_bucket.insert(sched_key, {"studentId": studentId, "quarterId": quarterId})
     except:
         return False

@@ -39,8 +39,8 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
     
     # see if student is already enrolled
     try:
-        sched = db.schedules.get_user_schedule(studentId, quarterId) or {"offerings": list()}  # more silliness
-        assert courseNum not in sched['offerings'] 
+        sched = db.schedules.get_user_schedule(studentId, quarterId)
+        assert sched is None or courseNum not in sched['offerings'] 
         print("User is not already enrolled in course")
     except AssertionError:
         return log_make_response("User already enrolled in course", 304)  # type: Response
@@ -53,7 +53,6 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
         return log_make_response("Class is full/maximum capacity reached", 403)
     
     # make user's schedule entry for that quarter if it doesn't exist
-    print("Going to init schedule")
     db.schedules.initialize_user_schedule(studentId, quarterId)
 
     # try:
