@@ -48,15 +48,8 @@ def offering(quarter=None, courseNum=None, offeringId=None):
     return offerings.offering_main(quarter, courseNum, offeringId)
 
 
-@app.route('/professor/<professorId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
-@catch_return_exceptions
-def professor(professorId=None):
-    professors.professor_main(professorId)
-
-
-@app.route('/quarter/<quarterId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@app.route('/quarter/<quarterId>', methods=['GET', 'PUT', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'PUT', 'OPTIONS'], headers=['content-type'])
 @catch_return_exceptions
 def quarter(quarterId=None):
     return quarters.quarter_main(quarterId)
