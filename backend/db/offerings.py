@@ -45,6 +45,7 @@ def get_single_offering(quarter, courseNum, sectionId):
 @catch_already_exists
 def offeringPUT(quarter, courseNum, sectionId):
     # TODO: make redis call
+    # TODO: should only be able to do this if course exists
     if not (quarter and courseNum and sectionId):
         return make_response("Missing a parameter. Need quarter, courseNum, sectionId", 400)
     upsert_quarter(quarter)
