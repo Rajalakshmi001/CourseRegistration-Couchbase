@@ -1,9 +1,9 @@
 from flask import Flask, request, Response, json, make_response
-from db.couchbase_server import *
+import db.couchbase_server as cbs
 import couchbase.subdocument as subdoc 
 from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response
 
-offering_bucket = cluster.open_bucket('offerings')
+offering_bucket = cbs.Buckets.offering_bucket
 
 
 @catch_missing

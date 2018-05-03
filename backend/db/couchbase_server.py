@@ -13,12 +13,17 @@ cluster.authenticate(__authenticator)
 adm = Admin('admin', 'An3WeeWa', host=SERVER_IP, port=8091)
 
 
-def __set_up_couchbase():
-    if input("Enter 'confirm' to confirm couchbase setup: ") != 'confirm':
-        return
+class Buckets():
+    offering_bucket = cluster.open_bucket('offerings')
+    schedule_bucket = cluster.open_bucket('schedules')
+    user_bucket = cluster.open_bucket('users')
+    course_bucket = cluster.open_bucket('courses')
 
-    # for bucket in ['users', 'courses', 'schedules']
-    adm.bucket_create('users')
+    _all =  [offering_bucket, schedule_bucket, user_bucket, course_bucket]
+    _timeout = 2.000
+
+    for bucket in _all:
+        bucket.timeout = _timeout
 
 
 if __name__ == '__main__':

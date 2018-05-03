@@ -2,7 +2,8 @@ import functools
 import inspect
 import json
 from flask import make_response, request, Response
-from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError, SubdocPathExistsError
+from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError, SubdocPathExistsError, TimeoutError
+from db.couchbase_server import Buckets
 
 def catch_missing(function):
     @functools.wraps(function)
@@ -82,6 +83,10 @@ def catch_return_exceptions(function):
     def wrapper(*args, **kwargs):
         try:
             return function(*args, **kwargs)
+        except TimeoutError as te:
+            return json_response("Timed out (> {} s) on {} {}".format(Buckets._timeout, request.method, request.url), 504)
         except Exception as e:
-            return json_response(dict(type=type(e), message=str(e)), 500)
+            d = dict(type=str(e.__class__.__name__), message=str(e))
+            print(">>",d)
+            return json_response(d, 500)
     return wrapper

@@ -25,7 +25,9 @@ def reg_tests():
     # sleep(10)
     # delete, add users
     for user in [user1, user2, user3]:
-        delete(uri('/user/'+user['username']))
+        for _ in range(2):
+            if delete(uri('/user/'+user['username'])) >= 400:
+                input("Cont: ")
         put(uri('/user'), user)
 
     # register user1, user2

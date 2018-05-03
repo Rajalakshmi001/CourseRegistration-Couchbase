@@ -1,19 +1,29 @@
 from itertools import chain
 from flask import Flask, request, Response, json, make_response
-from db.couchbase_server import *
+import db.couchbase_server as cb
+from couchbase.exceptions import TimeoutError
 import couchbase.subdocument as subdoc 
 from adb_utils import catch_missing, require_json_data, catch_already_exists, json_response, SubdocPathNotFoundError
-from db.offerings import offeringGet
 import db.registration as registration
 
 
-sched_bucket = cluster.open_bucket('schedules')
-sched_bucket.timeout = 2.500
+sched_bucket = cb.Buckets.schedule_bucket
 
 
 @catch_missing
 def get_user_schedule(studentId, quarterId):
-    return json_response(sched_bucket.get(studentId+'-'+quarterId, ).value)
+    # print("\n\nlookup")
+    sbg = sched_bucket.get(studentId+'-'+quarterId)
+    val = sbg.value
+    # try:
+    # except TimeoutError as te:
+    #     print("Retrying with more time than", sched_bucket.timeout,"-- type(e) is", type(te), "class is", te.__class__)
+    #     sbg = sched_bucket.get(studentId+'-'+quarterId)
+    #     return json_response(sbg.value)
+    # except Exception as e:
+    #     print(">"*6, "was not TimeoutError; was", type(e))
+    #     val = None
+    return json_response(val)
 
 
 def all_schedules_for(username):
@@ -31,6 +41,7 @@ def pull_enrollments(schedules):
 
 
 def del_all_scheds_for(username):
+    print("Deleting all schedules for", username)
     # from db.registration import unregister
     schedules = all_schedules_for(username)
     # de-register from all classes

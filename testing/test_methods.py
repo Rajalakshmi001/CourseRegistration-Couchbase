@@ -13,8 +13,15 @@ uri = lambda x: url+x
 
 print("DOING {} TESTS".format("LOCAL" if DO_LOCAL else "REMOTE"))
 
+try:
+    requests.get(url)
+    print("Connected")
+except:
+    print("Could not connect")
+    exit(1)
+
 def delete(path):
-    print("--------------- DELETE")
+    print("--------------- DELETE", path)
     r = requests.delete(path)
     print(r.status_code, r.text)
     return r.status_code
@@ -43,7 +50,7 @@ def get(path, include_code=False):
 
 
 def get_all(path):
-    print("---------------- GET ALL")
+    print("---------------- GET ALL", path)
     r = requests.get(path)  # type: Response
     returned = r.json() if r.content else None
     print("> GET ALL returned:", returned)
@@ -51,7 +58,7 @@ def get_all(path):
 
 
 def post(path, data):
-    print("---------------- POST")
+    print("---------------- POST", path)
     r = requests.post(path, data)
     return r.status_code
 

@@ -82,7 +82,7 @@ def scheduleLookup(studentId, quarterId):
     try:
         return schedules.get_user_schedule(studentId, quarterId)
     except Exception as e:
-        print("Lookup exception:", e)
+        print("Lookup exception:", type(e), e)
         return make_response(str(e), 500)
 
 
