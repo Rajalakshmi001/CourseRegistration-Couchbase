@@ -12,6 +12,7 @@ export class DatabaseService {
   constructor(private http: Http, private notificationService: NotificationService) { }
 
   public getStudents(): Promise<User[]> {
+    console.log('GET -- /user/');
     return new Promise((resolve, reject) => {
       this.http.get(`${environment.flaskRoot}/user`).subscribe(data => {
         const resp = JSON.parse(data['_body']);
@@ -26,6 +27,7 @@ export class DatabaseService {
   }
 
   public getCourses(): Promise<Course[]> {
+    console.log('GET -- /course/');
     return new Promise((resolve, reject) => {
       this.http.get(`${environment.flaskRoot}/course`).subscribe(data => {
         if (data.status === 200) {
@@ -40,6 +42,7 @@ export class DatabaseService {
   }
 
   public getOfferings(courseNum: String, quarter: String, offeringId: String = ''): Promise<Offering[]> {
+    console.log(`GET -- /offering/${quarter}/${courseNum}${offeringId ? '/' + offeringId : ''}`);
     return new Promise((resolve, reject) => {
       this.http.get(`${environment.flaskRoot}/offering/${quarter}/${courseNum}${offeringId ? '/' + offeringId : ''}`).subscribe(data => {
         if (data.status === 200) {
