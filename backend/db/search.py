@@ -25,6 +25,10 @@ def run_search(queryString=None, department=None):
 
         return list(redis_client.sunion(keyword_indices))
 
-    # if department:
+    if department:
+        return list(redis_client.smembers('dept:'+department.lower()))
+
+    else:
+        return []
 
     
