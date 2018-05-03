@@ -15,7 +15,7 @@ redis_client = Redis(
 def run_search(queryString=None, department=None):
     
     if queryString:
-        keywords = list(word.lower() for word in queryString.replace("\n","").split(" ") if len(word) > 3)
+        keywords = list(word.lower() for word in queryString.replace("\n"," ").split(" ") if len(word) > 3)
         keyword_indices = sorted('ind:'+keyword for keyword in keywords)
         sus = "search_{}".format(randint(0,1000000))
         print(keyword_indices)
