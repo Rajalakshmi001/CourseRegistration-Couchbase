@@ -1,7 +1,7 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory, make_response
 from flask_server.crossorigin import crossdomain
 from db import courses,users,offerings,quarters,professors,registration,schedules
-from adb_utils import catch_return_exceptions, json_response
+from adb_utils import catch_return_exceptions, json_response, catch_missing, pull_flask_args
 
 
 app = Flask(__name__)
@@ -71,8 +71,10 @@ def getRecommendations(userId):
 @app.route('/register', methods=['PUT', 'DELETE', 'OPTIONS'])
 @crossdomain(origin='*', methods=['PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 @catch_return_exceptions
+@catch_missing
+@pull_flask_args
 def registerForCourse(studentId=None, quarterId=None, courseNum=None, offeringId=None):
-    return registration.register_main()
+    return registration.register_main(studentId, quarterId, courseNum, offeringId)
 
 
 @app.route('/lookup/<studentId>/<quarterId>', methods=['GET'])
@@ -99,6 +101,9 @@ def generateSchedules():
 def getLogs():
     with open('adb.log', 'r') as log_file:
         return Response(response=log_file.read(), status=200)
+
+
+# @app.route('/search', methods=['POST'])
 
 
 if __name__ == '__main__':

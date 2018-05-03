@@ -24,7 +24,7 @@ def offeringGET(quarter, courseNum, sectionId):
             if not quarter:
                 return json_response(all_offerings())
             return get_for_quarter(quarter)
-        return json_response(get_course_sections(quarter, courseNum))
+        return json_response(get_course_sections_for_quarter(quarter, courseNum))
     return json_response(get_single_offering(quarter, courseNum, sectionId))
     
 def all_offerings():
@@ -35,11 +35,14 @@ def __offering_lookup_helper(qId, path):
     ob_data = offering_bucket.lookup_in(qId, subdoc.get(path))  # type: SubdocResult
     return ob_data[0]
 
-def get_course_sections(quarter, courseNum):
+def get_course_sections_for_quarter(quarter, courseNum):
     return list(__offering_lookup_helper(quarter, courseNum).values())
 
 def get_single_offering(quarter, courseNum, sectionId):
     return __offering_lookup_helper(quarter, courseNum+'.'+sectionId)
+
+def get_all_course_offerings(courseNum):
+    raise NotImplementedError("Not implemented")
 
 
 @catch_already_exists

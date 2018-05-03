@@ -89,7 +89,8 @@ def catch_return_exceptions(function):
             print(dict(type=str(e.__class__.__name__), message=str(e)))
             return json_response("Timed out (> {} s) on {} {}\n{}".format(Buckets._timeout, request.method, request.url, e), 504)
         except Exception as e:
-            d = dict(type=str(e.__class__.__name__), message=str(e), stack=traceback.format_exc())
-            print(">>",d)
+            trace = traceback.format_exc()
+            d = dict(type=str(e.__class__.__name__), message=str(e), stack=trace)
+            print(trace)
             return json_response(d, 500)
     return wrapper
