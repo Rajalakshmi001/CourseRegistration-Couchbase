@@ -1,8 +1,10 @@
 import functools
+import traceback
 import inspect
 import json
 from flask import make_response, request, Response
-from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError, SubdocPathExistsError
+from couchbase.exceptions import NotFoundError, KeyExistsError, SubdocPathNotFoundError, SubdocPathExistsError, TimeoutError
+from db.couchbase_server import Buckets
 
 def catch_missing(function):
     @functools.wraps(function)
@@ -62,10 +64,32 @@ def pull_flask_args(function):
         def val(key):
             return __get(req_data, key) or __get(kwargs, key) or __get(ad, key) or None
         new_kwa = {key: val(key) for key in arg_names}
+        print()
         print(request.method, request.url, new_kwa) 
         if request.method in ['PUT', 'POST']:
             for arg in arg_names:
                 if arg not in req_data:
                     return make_response("Missing '{}' for {}".format(arg, request.method), 400)
         return function(**new_kwa)
+    return wrapper
+
+
+def log_make_response(*args, **kwargs):
+    resp = make_response(*args, **kwargs)  # type: Response
+    print(resp.status_code, resp.get_data(True))
+    return resp
+
+
+def catch_return_exceptions(function):
+    @functools.wraps(function)
+    def wrapper(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except TimeoutError as e:
+            print(dict(type=str(e.__class__.__name__), message=str(e)))
+            return json_response("Timed out (> {} s) on {} {}\n{}".format(Buckets._timeout, request.method, request.url, e), 504)
+        except Exception as e:
+            d = dict(type=str(e.__class__.__name__), message=str(e), stack=traceback.format_exc())
+            print(">>",d)
+            return json_response(d, 500)
     return wrapper

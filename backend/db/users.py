@@ -3,8 +3,8 @@ import db.couchbase_server as cb
 from adb_utils import catch_missing, catch_already_exists, json_response, pull_flask_args
 from db.schedules import del_all_scheds_for
 
-user_bucket = cb.cluster.open_bucket('users')
-sched_bucket = cb.cluster.open_bucket('schedules')
+user_bucket = cb.Buckets.user_bucket
+
 
 @pull_flask_args
 def user_main(username):
@@ -44,4 +44,4 @@ def userPost(username):
 def userDelete(username):
     del_res = user_bucket.remove(username)  # type: OperationResult
     del_all_scheds_for(username)
-    return make_response('Deletion value {}, success {}'.format(del_res.value, del_res.success))
+    return json_response(del_res.success)

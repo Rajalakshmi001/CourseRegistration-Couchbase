@@ -19,13 +19,15 @@ def reg_tests():
 
     # delete, add offering
     off_uri = uri('/'.join(('/offering', quarter, t_o['courseNum'], t_o['offeringId'])))
-    delete(off_uri) #(uri('/offering/' + quarter +'/'+test_offering['courseNum']))
-    assert 201 == put(uri('/offering'), test_offering)
+    delete(off_uri)
+    assert 201 == put(uri('/offering'), t_o)
     get(off_uri)
     # sleep(10)
     # delete, add users
     for user in [user1, user2, user3]:
-        delete(uri('/user/'+user['username']))
+        for _ in range(2):
+            if delete(uri('/user/'+user['username'])) >= 400:
+                input("Cont: ")
         put(uri('/user'), user)
 
     # register user1, user2
@@ -39,7 +41,9 @@ def reg_tests():
         assert(put(reg_uri, rr) >= 300)
         go = get(off_uri)
         assert go['enrolled'] == i+1
-        user_sched = get(uri('/lookup/'+user['username']+'/'+rr['quarterId']))
+        sleep(1)
+        user_sched, code = get(uri('/lookup/'+user['username']+'/'+rr['quarterId']), True)
+        assert code < 300
         user_offerings = user_sched['offerings']
         assert courseNum in user_offerings
         assert user_offerings[courseNum] == rr['offeringId']
