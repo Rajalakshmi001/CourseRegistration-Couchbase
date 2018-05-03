@@ -6,6 +6,7 @@ import { CreateUserComponent } from './pages/create-student/create-student.compo
 import { RegisterComponent } from './pages/register/register.component';
 import { LookupComponent } from './pages/lookup/lookup.component';
 import { HomeComponent } from './pages/home/home.component';
+import { SearchComponent } from './pages/search/search.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,9 @@ const routes: Routes = [
   }, {
     path: 'lookup',
     component: LookupComponent
+  }, {
+    path: 'search',
+    component: SearchComponent
   }
 ];
 

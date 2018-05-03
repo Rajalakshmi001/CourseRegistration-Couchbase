@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  flaskRoot: 'http://137.112.89.91:5005'
+  flaskRoot: 'http://137.112.89.91:5005', // VM IP
+  // flaskRoot: 'http://137.112.235.33:5005', // DANIEL's IP
 };

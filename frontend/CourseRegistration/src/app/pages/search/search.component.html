@@ -1,0 +1,27 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Search</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <input matInput placeholder="Department Name" formControlName="department">
+      </mat-form-field>
+      <br/>
+      <mat-form-field>
+        <input matInput placeholder="Keywords" formControlName="queryString"/>
+      </mat-form-field>
+    </form>
+    <br/>
+    <button mat-button (click)="search()">search</button>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="results && results.length > 0">
+  <mat-card-content>
+    <mat-list *ngFor="let course of results">
+      <mat-list-item role="listitem">{{course}}</mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

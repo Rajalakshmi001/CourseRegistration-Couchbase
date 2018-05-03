@@ -28,6 +28,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { InfoMessageComponent } from './components/info-message/info-message.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { KeysPipe } from './keys/keys.pipe';
+import { SearchComponent } from './pages/search/search.component';
 
 const matImports = [
   MatSelectModule,
@@ -56,6 +57,7 @@ const matImports = [
     HomeComponent,
     InfoMessageComponent,
     KeysPipe,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,
