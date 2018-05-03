@@ -11,6 +11,8 @@ redis_client = Redis(
     charset='utf-8',
     decode_responses=True)
 
+print("Redis connected:", redis_client.ping())
+
 
 def run_search(queryString=None, department=None):
     
