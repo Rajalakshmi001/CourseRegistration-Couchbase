@@ -66,10 +66,3 @@ class Neo4JPublisher(Publisher):
     
     def save_enrollment(self, username, courseNum):
         self.create("enrollments", username=username, courseNum=courseNum)
-
-
-rp = RedisPublisher()
-rp.create_course(dict(courseNum="csse433", name="Advanced Databases"))
-
-# n4jp = Neo4JPublisher()
-# n4jp.save_enrollment("test_user", "test_course")

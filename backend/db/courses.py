@@ -42,5 +42,5 @@ def coursePOST(courseNum):
 def courseDELETE(courseNum):
     # TODO: delete all offerings
     del_res = course_bucket.remove(courseNum)  # type: OperationResult
-    RedisPublisher().delete_course(request.get_json())
+    RedisPublisher().delete_course(dict(courseNum=courseNum))
     return make_response("Successfully deleted" if del_res.success else "Delete failed")
