@@ -14,13 +14,28 @@ reg_uri = uri('/register')
 def del_user(user):
     delete(uri('/user/'+user['username']))
 
+
+reg_request = lambda user: dict(studentId=user['username'], quarterId=t_o['quarter'], 
+                    courseNum=t_o['courseNum'], offeringId=t_o['offeringId'])
+
+off_uri = uri('/'.join(('/offering', quarter, t_o['courseNum'], t_o['offeringId'])))
+
+
+def wipe_db():
+    for user in [user1, user2, user3]:
+         delete(uri('/user/'+user['username']))
+    delete(off_uri)
+
 def reg_tests():
     print("\n\n>>> Doing registration tests\n")
 
-    # delete, add offering
-    off_uri = uri('/'.join(('/offering', quarter, t_o['courseNum'], t_o['offeringId'])))
+    # delete offering
     delete(off_uri)
+    # try to register for non-existent offering. Assert failure
+    assert put(reg_uri, reg_request(user1)) >= 300
+    # make offering
     assert 201 == put(uri('/offering'), t_o)
+    # get offering (why?)
     get(off_uri)
     # sleep(10)
     # delete, add users
@@ -31,8 +46,6 @@ def reg_tests():
         put(uri('/user'), user)
 
     # register user1, user2
-    reg_request = lambda user: dict(studentId=user['username'], quarterId=t_o['quarter'], 
-                        courseNum=t_o['courseNum'], offeringId=t_o['offeringId'])
     for i,user in enumerate([user1, user2]):
         rr = reg_request(user)
         courseNum = rr['courseNum']
