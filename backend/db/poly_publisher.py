@@ -66,7 +66,6 @@ class Neo4JPublisher(Publisher):
     
     def save_enrollment(self, username, courseNum):
         self.create("enrollments", username=username, courseNum=courseNum)
-    
 
 
 rp = RedisPublisher()

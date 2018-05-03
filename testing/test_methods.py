@@ -23,7 +23,7 @@ def retry_504(function):
                 assert ret[-1] != 504
             return ret
         except AssertionError:
-            print("Retrying due to 504", "*" * 20)
+            print("Retrying due to 504", ">" * 50,'')
             return function(*a, **kwa)
     return wrapper
 
