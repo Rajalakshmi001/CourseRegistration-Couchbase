@@ -12,7 +12,6 @@ offering_bucket = cb.Buckets.offering_bucket
 sched_bucket = cb.Buckets.schedule_bucket
 
 
-@pull_flask_args
 def register_main(studentId, quarterId, courseNum, offeringId):
     method_map = {"PUT": registerPUT, "DELETE": registerDELETE}
     
