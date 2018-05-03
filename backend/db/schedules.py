@@ -10,10 +10,9 @@ import db.registration as registration
 sched_bucket = cb.Buckets.schedule_bucket
 
 
-@catch_missing
 def get_user_schedule(studentId, quarterId):
     # print("\n\nlookup")
-    sbg = sched_bucket.get(studentId+'-'+quarterId)
+    sbg = sched_bucket.get(studentId+'-'+quarterId, quiet=None)
     val = sbg.value
     # try:
     # except TimeoutError as te:
@@ -23,8 +22,18 @@ def get_user_schedule(studentId, quarterId):
     # except Exception as e:
     #     print(">"*6, "was not TimeoutError; was", type(e))
     #     val = None
-    return json_response(val)
+    return val  # json_response(val)
 
+
+@catch_already_exists
+def initialize_user_schedule(studentId, quarterId):
+    sched_key = studentId+"-"+quarterId
+    try:
+        print("INSERTING SCHEDULE FOR", sched_key)
+        return sched_bucket.insert(sched_key, {"studentId": studentId, "quarterId": quarterId})
+    except:
+        return False
+        
 
 def all_schedules_for(username):
     return list(sched_bucket.n1ql_query('SELECT quarterId,offerings,studentId FROM schedules WHERE studentId="{}"'.format(username)))
@@ -63,3 +72,21 @@ def __unsafe_delete_user_schedules(username, *quarters):
     sched_keys = list(username+'-'+quarter for quarter in quarters)
     sched_bucket.remove_multi(sched_keys, quiet=True)
     return True
+
+
+def remove_course_from_sched(studentId, quarterId, courseNum, offeringId):
+    """
+    NOT count-safe
+    """
+    return sched_bucket.mutate_in(sched_key(studentId, quarterId), subdoc.remove(course_subkey(courseNum)))
+
+
+def add_course_to_sched(studentId, quarterId, courseNum, offeringId):
+    return sched_bucket.mutate_in(sched_key(studentId, quarterId), subdoc.insert(course_subkey(courseNum), offeringId, create_parents=True))
+
+
+def sched_key(studentId, quarterId):
+    return "{}-{}".format(studentId, quarterId)
+
+def course_subkey(courseNum):
+    return 'offerings.{}'.format(courseNum)

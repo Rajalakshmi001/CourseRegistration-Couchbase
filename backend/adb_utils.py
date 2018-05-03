@@ -63,6 +63,7 @@ def pull_flask_args(function):
         def val(key):
             return __get(req_data, key) or __get(kwargs, key) or __get(ad, key) or None
         new_kwa = {key: val(key) for key in arg_names}
+        print()
         print(request.method, request.url, new_kwa) 
         if request.method in ['PUT', 'POST']:
             for arg in arg_names:
@@ -83,8 +84,9 @@ def catch_return_exceptions(function):
     def wrapper(*args, **kwargs):
         try:
             return function(*args, **kwargs)
-        except TimeoutError as te:
-            return json_response("Timed out (> {} s) on {} {}".format(Buckets._timeout, request.method, request.url), 504)
+        except TimeoutError as e:
+            print(dict(type=str(e.__class__.__name__), message=str(e)))
+            return json_response("Timed out (> {} s) on {} {}\n{}".format(Buckets._timeout, request.method, request.url, e), 504)
         except Exception as e:
             d = dict(type=str(e.__class__.__name__), message=str(e))
             print(">>",d)

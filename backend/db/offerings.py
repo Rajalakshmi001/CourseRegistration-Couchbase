@@ -68,3 +68,24 @@ def offeringDELETE(quarter, courseNum, sectionId):
     sec = ("." + sectionId) if sectionId else ''
     offering_bucket.mutate_in(quarter, subdoc.remove(courseNum + sec))
     return make_response("Deleted", 200)
+
+
+def get_available_spots(quarterId, courseNum, offeringId):
+    offering = get_single_offering(quarterId, courseNum, offeringId)
+    return offering['capacity']  - offering['enrolled']
+
+
+def change_enrollment_count(quarterId, courseNum, offeringId, delta):
+    return list(offering_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', delta)))[0]
+
+
+def incr_enrollment_count(quarterId, courseNum, offeringId):
+    return change_enrollment_count(quarterId, courseNum, offeringId, 1)
+
+
+def decr_enrollment_count(quarterId, courseNum, offeringId):
+    return change_enrollment_count(quarterId, courseNum, offeringId, -1)
+
+
+def zero_enrollment_count(quarterId, courseNum, offeringId):
+    return list(offering_bucket.mutate_in(quarterId, subdoc.upsert(courseNum+'.'+offeringId+'.enrolled', 0)))[0]

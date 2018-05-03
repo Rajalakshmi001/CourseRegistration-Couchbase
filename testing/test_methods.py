@@ -1,17 +1,31 @@
 import requests, json, os
 from requests import Response
 from time import sleep
-from functools import partial
+from functools import partial, wraps
 
 
 print = partial(print, flush=True)
-
 
 DO_LOCAL = not os.getenv("CI")
 url = "http://localhost:5005"  if DO_LOCAL else "http://137.112.89.91:5005" 
 uri = lambda x: url+x
 
 print("DOING {} TESTS".format("LOCAL" if DO_LOCAL else "REMOTE"))
+
+def retry_504(function):
+    @wraps(function)
+    def wrapper(*a, **kwa):
+        ret = function(*a, **kwa)
+        try:
+            if isinstance(ret, int):
+                assert ret != 504
+            elif isinstance(ret, list) or isinstance(ret, tuple):
+                assert ret[-1] != 504
+            return ret
+        except AssertionError:
+            print("Retrying due to 504", "*" * 20)
+            return function(*a, **kwa)
+    return wrapper
 
 try:
     requests.get(url)
@@ -20,6 +34,8 @@ except:
     print("Could not connect")
     exit(1)
 
+
+@retry_504
 def delete(path):
     print("--------------- DELETE", path)
     r = requests.delete(path)
@@ -27,6 +43,7 @@ def delete(path):
     return r.status_code
 
 
+@retry_504
 def put(path, data):
     print("---------------- PUT", path)
     print("\t", data)
@@ -36,6 +53,7 @@ def put(path, data):
     return r.status_code
 
 
+@retry_504
 def get(path, include_code=False):
     print("---------------- GET", path)
     r = requests.get(path)  # type: Response
@@ -49,6 +67,7 @@ def get(path, include_code=False):
     return returned
 
 
+@retry_504
 def get_all(path):
     print("---------------- GET ALL", path)
     r = requests.get(path)  # type: Response
@@ -57,6 +76,7 @@ def get_all(path):
     return returned
 
 
+@retry_504
 def post(path, data):
     print("---------------- POST", path)
     r = requests.post(path, data)
