@@ -13,14 +13,14 @@ before_script:
 push_to_server:
     stage: deploy
     script:
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd 433-CourseReg && git pull"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd /home/csse/433-CourseReg && git pull"
     tags: 
     - ubuntu
     
 restart_server:
     stage: restart
     script: 
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "restartFlaskService"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "/home/csse/restartFlaskService"
     tags: 
     - ubuntu
     
@@ -39,7 +39,7 @@ run_tests:
 save_good_commit_hash:
     stage: save_commit
     script: 
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "echo ${CI_COMMIT_SHA} > lastWorkingCommit"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd /home/csse/; echo ${CI_COMMIT_SHA} > lastWorkingCommit"
     when: on_success
     tags: 
     - ubuntu
@@ -47,7 +47,7 @@ save_good_commit_hash:
 rollback_to_prev:
     stage: rollback
     script:
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "revertFlask && restartFlaskService"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "/home/csse/revertFlask && /home/csse/restartFlaskService"
     when: on_failure
     tags: 
     - ubuntu
