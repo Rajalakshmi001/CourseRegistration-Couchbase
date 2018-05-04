@@ -20,7 +20,7 @@ push_to_server:
 restart_server:
     stage: restart
     script: 
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "(/bin/bash bin/restartFlaskService & (sleep 5 && echo "done restarting" && exit 0))"
+    - (ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "/bin/bash bin/restartFlaskService"  & (sleep 5 && echo "done restarting" && exit 0  && echo "why am I doing this"))
     tags: 
     - ubuntu
     
