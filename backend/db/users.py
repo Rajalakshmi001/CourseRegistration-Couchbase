@@ -8,13 +8,13 @@ user_bucket = cb.Buckets.user_bucket
 
 @pull_flask_args
 def user_main(username):
-    method_map = {"GET": userGet, "PUT": userPut, "POST": userPost, "DELETE": userDelete}
+    method_map = {"GET": userGET, "PUT": userPUT, "POST": userPOST, "DELETE": userDELETE}
     try:
         return method_map[request.method](username)
     except AssertionError:
         return make_response("Must include username", 400)
 
-def userGet(username):
+def userGET(username):
     if not username:
         # return all users
         return json_response(list(user_bucket.n1ql_query('select username,name from users')))
@@ -27,21 +27,21 @@ def get_user(username):
 
 
 @catch_already_exists
-def userPut(username):
+def userPUT(username):
     data = request.get_json()
     user_bucket.insert(username, data)  # type: OperationResult
     return make_response('User ' + username + ' inserted', 201)
 
 
 @catch_missing
-def userPost(username):
+def userPOST(username):
     data = request.get_json()
     opres = user_bucket.replace(username, data)  # type: OperationResult
     return make_response('Document updated: ' + opres.success, 200)
  
 
 @catch_missing
-def userDelete(username):
+def userDELETE(username):
     del_res = user_bucket.remove(username)  # type: OperationResult
     del_all_scheds_for(username)
     return json_response(del_res.success)
