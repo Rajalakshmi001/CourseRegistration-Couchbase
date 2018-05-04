@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory, make_response
 from flask_server.crossorigin import crossdomain
-from db import courses,users,offerings,quarters,professors,registration,schedules
+from db import courses,users,offerings,quarters,registration,schedules,search
 from adb_utils import catch_return_exceptions, json_response, catch_missing, pull_flask_args
 
 
@@ -25,6 +25,19 @@ def hello():
 def user(username=None):
     return users.user_main(username)
 
+@app.route('/professors', methods=['GET', 'OPTIONS']) 
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
+def professors():
+    return json_response(users.get_professors())
+
+
+@app.route('/students', methods=['GET', 'OPTIONS']) 
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
+def students():
+    return json_response(users.get_students())
+
 
 @app.route('/course', methods=ALL_METHODS)
 @app.route('/courses', methods=['GET'])  # to get all courses. Same as GET /course
@@ -48,15 +61,8 @@ def offering(quarter=None, courseNum=None, offeringId=None):
     return offerings.offering_main(quarter, courseNum, offeringId)
 
 
-@app.route('/professor/<professorId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
-@catch_return_exceptions
-def professor(professorId=None):
-    professors.professor_main(professorId)
-
-
-@app.route('/quarter/<quarterId>', methods=['GET', 'PUT' , 'POST' , 'DELETE' , 'OPTIONS'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
+@app.route('/quarter/<quarterId>', methods=['GET', 'PUT', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'PUT', 'OPTIONS'], headers=['content-type'])
 @catch_return_exceptions
 def quarter(quarterId=None):
     return quarters.quarter_main(quarterId)
@@ -103,7 +109,12 @@ def getLogs():
         return Response(response=log_file.read(), status=200)
 
 
-# @app.route('/search', methods=['POST'])
+@app.route('/search', methods=['POST', 'OPTIONS'])
+@crossdomain(origin='*', methods=['POST', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
+def search_query():
+    return json_response(search.run_search(**(request.get_json())))
+    
 
 
 if __name__ == '__main__':

@@ -35,7 +35,6 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
     except:
         return log_make_response("User {} does not exist".format(studentId), 400)
     
-    
     # see if student is already enrolled
     try:
         sched = db.schedules.get_user_schedule(studentId, quarterId)
@@ -60,7 +59,6 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
         # pass
 
     db.schedules.add_course_to_sched(studentId, quarterId, courseNum, offeringId)
-
     incr = offering_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
     print("Incremented enrollment count to:", list(incr)[0])
     return log_make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)

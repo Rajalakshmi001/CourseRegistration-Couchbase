@@ -64,8 +64,6 @@ def pull_flask_args(function):
         def val(key):
             return __get(req_data, key) or __get(kwargs, key) or __get(ad, key) or None
         new_kwa = {key: val(key) for key in arg_names}
-        print()
-        print(request.method, request.url, new_kwa) 
         if request.method in ['PUT', 'POST']:
             for arg in arg_names:
                 if arg not in req_data:
@@ -83,6 +81,7 @@ def log_make_response(*args, **kwargs):
 def catch_return_exceptions(function):
     @functools.wraps(function)
     def wrapper(*args, **kwargs):
+        print(request.method, request.url)
         try:
             return function(*args, **kwargs)
         except TimeoutError as e:
