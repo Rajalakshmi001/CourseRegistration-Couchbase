@@ -20,7 +20,7 @@ push_to_server:
 restart_server:
     stage: restart
     script: 
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "./restartFlaskServer.sh"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "restartFlaskService"
     tags: 
     - ubuntu
     
@@ -47,7 +47,7 @@ save_good_commit_hash:
 rollback_to_prev:
     stage: rollback
     script:
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "./revertToPrev.sh && ./restartFlaskServer.sh"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "revertFlask && restartFlaskService"
     when: on_failure
     tags: 
     - ubuntu
