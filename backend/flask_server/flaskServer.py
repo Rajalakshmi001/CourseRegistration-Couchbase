@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory, make_response
 from flask_server.crossorigin import crossdomain
-from db import courses,users,offerings,quarters,professors,registration,schedules,search
+from db import courses,users,offerings,quarters,registration,schedules,search
 from adb_utils import catch_return_exceptions, json_response, catch_missing, pull_flask_args
 
 
@@ -24,6 +24,19 @@ def hello():
 @catch_return_exceptions
 def user(username=None):
     return users.user_main(username)
+
+@app.route('/professors', methods=['GET', 'OPTIONS']) 
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
+def professors():
+    return json_response(users.get_professors())
+
+
+@app.route('/students', methods=['GET', 'OPTIONS']) 
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
+@catch_return_exceptions
+def students():
+    return json_response(users.get_students())
 
 
 @app.route('/course', methods=ALL_METHODS)

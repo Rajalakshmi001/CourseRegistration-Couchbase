@@ -17,13 +17,27 @@ def user_main(username):
 def userGET(username):
     if not username:
         # return all users
-        return json_response(list(user_bucket.n1ql_query('select username,name from users')))
+       return json_response(get_all_users())
     
     return json_response(get_user(username))  # type: ValueResult
-    
+
 
 def get_user(username):
     return user_bucket.get(username, quiet=True).value
+
+
+def get_all_users():
+    return list(user_bucket.n1ql_query('select username,name,type from users'))
+
+
+def get_students():
+    return get_users_of_type('stud')
+
+def get_professors():
+    return get_users_of_type('prof')
+
+def get_users_of_type(type):
+    return list(user_bucket.n1ql_query("SELECT username,name FROM users WHERE type = '{}'".format(type)))
 
 
 @catch_already_exists

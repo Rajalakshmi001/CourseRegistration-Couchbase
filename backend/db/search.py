@@ -11,7 +11,12 @@ redis_client = Redis(
     charset='utf-8',
     decode_responses=True)
 
-print("Redis connected:", redis_client.ping())
+try:
+    print("Redis connected")
+    assert redis_client.ping()
+except:
+    print("Could not connect to redis")
+    exit(1)
 
 
 def run_search(queryString=None, department=None):
