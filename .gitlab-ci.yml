@@ -13,7 +13,7 @@ before_script:
 push_to_server:
     stage: deploy
     script:
-    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd /home/csse/bin/433-CourseReg && git pull"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "cd /home/csse/433-CourseReg && git pull"
     tags: 
     - ubuntu
     
