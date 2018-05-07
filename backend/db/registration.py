@@ -71,6 +71,7 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
 def registerDELETE(studentId, quarterId, courseNum, offeringId):
     class_str = "{}: {}-{}".format(quarterId, courseNum, offeringId)
     try:
+        Neo4JPublisher().delete_enrollment(data)
         unregister(studentId, quarterId, courseNum, offeringId)
     except SubdocPathNotFoundError:
         return log_make_response(studentId + " was not registered for " + class_str, 400)
@@ -87,5 +88,4 @@ def unregister(studentId, quarterId, courseNum, offeringId):
         zero_res = offerings.zero_enrollment_count(quarterId, courseNum, offeringId)
         print("Reset to zero:", zero_res)
 
-    Neo4JPublisher().delete_enrollment(data)
     return True
