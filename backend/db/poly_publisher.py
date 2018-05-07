@@ -63,6 +63,16 @@ class Neo4JPublisher(Publisher):
     @property
     def topic(self):
         return "NEO4J"
+
+    def create_enrollment(self, enrollment_data):
+        self.create("ENROLLMENT", enrollment_data)
+
+    def delete_enrollment(self, enrollment_data):
+        self.delete("ENROLLMENT", enrollment_data)
+
+    def update_enrollment(self, enrollment_data):
+        self.delete("ENROLLMENT", enrollment_data)
+        self.create("ENROLLMENT", enrollment_data)
     
     def save_enrollment(self, username, courseNum):
         self.create("enrollments", username=username, courseNum=courseNum)
