@@ -79,7 +79,7 @@ def registerDELETE(studentId, quarterId, courseNum, offeringId):
 
 def unregister(studentId, quarterId, courseNum, offeringId):
     # sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.remove('offerings.'+courseNum))  # will throw exception if user is not registered for course
-    db.schedulesremove_course_from_sched(studentId, quarterId, courseNum, offeringId)
+    db.schedules.remove_course_from_sched(studentId, quarterId, courseNum, offeringId)
     ## decr = list(offering_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', -1)))[0]
     decr = offerings.decr_enrollment_count(quarterId, courseNum, offeringId)
     print("Decremented enrollment count to:", decr)
