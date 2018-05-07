@@ -87,4 +87,5 @@ def unregister(studentId, quarterId, courseNum, offeringId):
         zero_res = offerings.zero_enrollment_count(quarterId, courseNum, offeringId)
         print("Reset to zero:", zero_res)
 
+    Neo4JPublisher().delete_enrollment(data)
     return True
