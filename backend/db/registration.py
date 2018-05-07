@@ -59,10 +59,11 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
     # except:
         # pass
 
+    # should throw exception if already enrolled
     db.schedules.add_course_to_sched(studentId, quarterId, courseNum, offeringId)
+
     data = { 'studentId': studentId, 'quarterId': quarterId, 'courseNum': courseNum, 'offeringId': offeringId }
-    incr = offering_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
-    print("Incremented enrollment count to:", list(incr)[0])
+    offerings.incr_enrollment_count(quarterId, courseNum, offeringId)
     Neo4JPublisher().create_enrollment(data)
     return log_make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
 
@@ -71,7 +72,7 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
 def registerDELETE(studentId, quarterId, courseNum, offeringId):
     class_str = "{}: {}-{}".format(quarterId, courseNum, offeringId)
     try:
-        Neo4JPublisher().delete_enrollment(data)
+        Neo4JPublisher().delete_enrollment(dict(studentId=studentId, quarterId=quarterId, courseNum=courseNum,offeringId=offeringId))
         unregister(studentId, quarterId, courseNum, offeringId)
     except SubdocPathNotFoundError:
         return log_make_response(studentId + " was not registered for " + class_str, 400)
