@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, json, Blueprint, send_from_directory, make_response
 from flask_server.crossorigin import crossdomain
-from db import courses,users,offerings,quarters,registration,schedules,search
+from db import courses,users,offerings,quarters,registration,schedules,search,recommendations
 from adb_utils import catch_return_exceptions, json_response, catch_missing, pull_flask_args
 
 
@@ -68,10 +68,11 @@ def quarter(quarterId=None):
     return quarters.quarter_main(quarterId)
 
 
-@app.route('/recommend/<userId>', methods=['GET'])
+@app.route('/recommend/<userId>', methods=['GET', 'OPTIONS'])
+@crossdomain(origin='*', methods=['GET', 'OPTIONS'], headers=['content-type'])
 @catch_return_exceptions
 def getRecommendations(userId):
-    pass
+    return recommendations.recommend_main(userId)
 
 
 @app.route('/register', methods=['PUT', 'DELETE', 'OPTIONS'])
