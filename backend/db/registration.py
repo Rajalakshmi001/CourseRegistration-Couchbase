@@ -7,6 +7,7 @@ from adb_utils import pull_flask_args, catch_missing, require_json_data, catch_a
 import db.users
 import db.offerings as offerings
 import db.schedules
+from db.poly_publisher import Neo4JPublisher
 
 offering_bucket = cb.Buckets.offering_bucket
 sched_bucket = cb.Buckets.schedule_bucket
@@ -59,8 +60,10 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
         # pass
 
     db.schedules.add_course_to_sched(studentId, quarterId, courseNum, offeringId)
+    data = { 'studentId': studentId, 'quarterId': quarterId, 'courseNum': courseNum, 'offeringId': offeringId }
     incr = offering_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', 1))
     print("Incremented enrollment count to:", list(incr)[0])
+    Neo4JPublisher().create_enrollment(data)
     return log_make_response("Registered {} for {}: {}-{}".format(studentId, quarterId, courseNum, offeringId), 201)
 
 
@@ -68,6 +71,7 @@ def registerPUT(studentId, quarterId, courseNum, offeringId):
 def registerDELETE(studentId, quarterId, courseNum, offeringId):
     class_str = "{}: {}-{}".format(quarterId, courseNum, offeringId)
     try:
+        Neo4JPublisher().delete_enrollment(data)
         unregister(studentId, quarterId, courseNum, offeringId)
     except SubdocPathNotFoundError:
         return log_make_response(studentId + " was not registered for " + class_str, 400)
@@ -76,7 +80,7 @@ def registerDELETE(studentId, quarterId, courseNum, offeringId):
 
 def unregister(studentId, quarterId, courseNum, offeringId):
     # sched_bucket.mutate_in(studentId+"-"+quarterId, subdoc.remove('offerings.'+courseNum))  # will throw exception if user is not registered for course
-    db.schedulesremove_course_from_sched(studentId, quarterId, courseNum, offeringId)
+    db.schedules.remove_course_from_sched(studentId, quarterId, courseNum, offeringId)
     ## decr = list(offering_bucket.mutate_in(quarterId, subdoc.counter(courseNum+'.'+offeringId+'.enrolled', -1)))[0]
     decr = offerings.decr_enrollment_count(quarterId, courseNum, offeringId)
     print("Decremented enrollment count to:", decr)

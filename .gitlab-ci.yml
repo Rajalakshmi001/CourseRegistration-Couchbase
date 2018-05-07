@@ -21,6 +21,8 @@ restart_server:
     stage: restart
     script: 
     - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "sudo systemctl restart FlaskService.service"
+    - sleep 5
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "sudo systemctl status FlaskService.service"
     tags: 
     - ubuntu
     - csse477

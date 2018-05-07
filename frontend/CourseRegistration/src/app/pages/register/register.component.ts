@@ -4,7 +4,7 @@ import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { Http } from '@angular/http';
-import { Course } from '../../models/course.model';
+import { Course, CourseTaken } from '../../models/course.model';
 import { DatabaseService } from '../../services/database/database.service';
 import * as _ from 'lodash';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
@@ -23,6 +23,10 @@ export class RegisterComponent implements OnInit {
   public offerings: String[];
   public quarters: { name: String, value: String }[];
   public lastVal: any;
+  public recommendedCourses: any[] = [
+    {courseNum: 'course1'},
+    {courseNum: 'course2'}
+  ];
 
   constructor(private http: Http,
     private notificationService: NotificationService,
@@ -67,6 +71,20 @@ export class RegisterComponent implements OnInit {
         this.offerings = null;
         this.form.get('offeringId').disable();
       }
+    });
+
+    this.form.get('studentId').valueChanges.subscribe(data => {
+      console.log(data);
+      this.getRecommendations(data);
+    });
+  }
+
+  private getRecommendations(val) {
+    this.http.get(`${environment.flaskRoot}/recommendations/${val}`).subscribe(resp => {
+      console.log(resp);
+      this.recommendedCourses = JSON.parse(resp['_body']);
+    }, error => {
+      console.error(error);
     });
   }
 
