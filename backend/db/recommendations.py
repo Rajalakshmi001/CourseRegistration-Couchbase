@@ -18,7 +18,7 @@ def match(cmd):
 
 
 def recommend_courses_for(userId):
-    query_str = "MATCH (s1:Student {studentId: '"+userId+"'})-[r:Enrolled]->(c1:Course)<-[r2:Enrolled]-(s2:Student)-[r3:Enrolled]->(c3:Course) RETURN c3"
+    query_str = "MATCH (s1:Student {studentId: '"+userId+"'})-[r:Enrolled]->(c1:Course)<-[r2:Enrolled]-(s2:Student)-[r3:Enrolled]->(c3:Course) RETURN DISTINCT c3"
     matches =  match(query_str)
 
     coursenums = set(entry['courseNum'] for entry in matches if 'courseNum' in entry)
