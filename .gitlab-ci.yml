@@ -51,6 +51,7 @@ rollback_to_prev:
     stage: rollback
     script:
     - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "revertFlask && restartFlaskService"
+    - ssh -o StrictHostKeyChecking=no -i /tmp/privkey csse@433-21.csse.rose-hulman.edu -t "journalctl -u FlaskService.service | tail -n 50"
     when: on_failure
     tags: 
     - ubuntu
