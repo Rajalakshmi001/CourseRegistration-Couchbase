@@ -76,6 +76,7 @@ def getRecommendations(userId):
 
 
 @app.route('/register', methods=['PUT', 'DELETE', 'OPTIONS'])
+@app.route('/register/<userId>/<quarterId>/<courseNum>/<offeringId>', methods=['PUT', 'DELETE', 'OPTIONS'])
 @crossdomain(origin='*', methods=['PUT', 'DELETE', 'OPTIONS'], headers=['content-type'])
 @catch_return_exceptions
 @catch_missing
