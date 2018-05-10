@@ -80,9 +80,10 @@ export class RegisterComponent implements OnInit {
   }
 
   private getRecommendations(val) {
-    this.http.get(`${environment.flaskRoot}/recommendations/${val}`).subscribe(resp => {
+    this.http.get(`${environment.flaskRoot}/recommend/${val}`).subscribe(resp => {
       console.log(resp);
       this.recommendedCourses = JSON.parse(resp['_body']);
+      console.log(this.recommendedCourses);
     }, error => {
       console.error(error);
     });
