@@ -1,6 +1,7 @@
 stages:
 - deploy
 - restart
+- ping
 - test
 - save_commit
 - rollback
@@ -26,12 +27,18 @@ restart_server:
     tags: 
     - ubuntu
     - csse477
-    
+
+ping:
+    stage: ping
+    script: 
+    - chmod +x testing/curlTest.sh
+    - ./testing/curlTest.sh
+    tags: 
+    - ubuntu
+
 run_tests:
     stage: test
     script:
-    - chmod +x testing/flaskTests.sh
-    - ./testing/flaskTests.sh
     - python3 testing/backendTests.py
     when: on_success
     tags: 
