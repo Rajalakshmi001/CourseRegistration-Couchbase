@@ -35,8 +35,10 @@ if __name__ == '__main__':
 
 
 """
-n1ql:> CREATE PRIMARY INDEX username ON users
-CREATE PRIMARY INDEX courseNum ON courses
-CREATE PRIMARY INDEX 
+CREATE INDEX `quarterId` ON `schedules`(`quarterId`)
+CREATE INDEX `schedCourses` ON `schedules`(`offerings`)
+CREATE INDEX `studentId` ON `schedules`(`studentId`)
+
+
 
 """
