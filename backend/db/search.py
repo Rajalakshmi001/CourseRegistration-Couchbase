@@ -13,8 +13,8 @@ redis_client = Redis(
     decode_responses=True)
 
 try:
-    print("Redis connected")
     assert redis_client.ping()
+    print("Redis connected")
 except:
     print("Could not connect to redis")
     try:
