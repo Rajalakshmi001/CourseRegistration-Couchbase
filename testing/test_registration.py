@@ -67,7 +67,7 @@ def reg_tests():
     for user in [user1, user2]:
         rr = reg_request(user)
         dereg_uri = uri('/register/{}/{}/{}/{}'.format(rr['studentId'], rr['quarterId'], rr['courseNum'], rr['offeringId']))
-        assert(delete(dereg_uri) == 201)
+        assert(delete(dereg_uri) == 200)
 
     delete(uri('/quarter/'+rr['quarterId']))
     for user in [user1, user2, user3]:
