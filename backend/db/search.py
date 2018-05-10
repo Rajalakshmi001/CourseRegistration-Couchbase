@@ -1,3 +1,4 @@
+import os
 from random import randint
 from flask import request
 from redis import Redis
@@ -16,11 +17,15 @@ try:
     assert redis_client.ping()
 except:
     print("Could not connect to redis")
-    exit(1)
+    try:
+        print("Trying to ssh")
+        os.system("ssh -M -N -L 6379:localhost:6379 csse@433-22.csse.rose-hulman.edu & :")
+    except:
+        print("Failed")
+        exit(1)
 
 
 def run_search(queryString=None, department=None):
-    
     if queryString:
         keywords = list(word.lower() for word in queryString.replace("\n"," ").split(" ") if len(word) > 3)
         keyword_indices = sorted('ind:'+keyword for keyword in keywords)
@@ -37,5 +42,3 @@ def run_search(queryString=None, department=None):
 
     else:
         return []
-
-    
