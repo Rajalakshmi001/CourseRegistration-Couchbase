@@ -16,8 +16,9 @@ sched_bucket = cb.Buckets.schedule_bucket
 def register_main(studentId, quarterId, courseNum, offeringId):
     method_map = {"PUT": registerPUT, "DELETE": registerDELETE}
     
-    if not (studentId and quarterId and courseNum and offeringId):
-        return log_make_response("Missing a param", 400)
+    for i, param in enumerate((studentId, quarterId, courseNum, offeringId)):
+        if not param:
+            return log_make_response("Missing param {}. ".format(i), 400)
 
     return method_map[request.method](studentId, quarterId, courseNum, offeringId)
 
