@@ -21,7 +21,7 @@ reg_request = lambda user: dict(studentId=user['username'], quarterId=t_o['quart
 off_uri = uri('/'.join(('/offering', quarter, t_o['courseNum'], t_o['offeringId'])))
 
 
-def wipe_db():
+def clean_db():
     for user in [user1, user2, user3]:
          delete(uri('/user/'+user['username']))
     delete(off_uri)
@@ -60,8 +60,14 @@ def reg_tests():
         user_offerings = user_sched['offerings']
         assert courseNum in user_offerings
         assert user_offerings[courseNum] == rr['offeringId']
+    # try to add user to full offering; should fail
     assert put(reg_uri, reg_request(user3)) >= 400
     assert get(off_uri)['enrolled'] == i+1
+    # de-register 
+    for user in [user1, user2]:
+        rr = reg_request(user)
+        assert(delete(reg_uri, rr) == 201)
+
     delete(uri('/quarter/'+rr['quarterId']))
     for user in [user1, user2, user3]:
         delete(uri('/user/'+user['username']))

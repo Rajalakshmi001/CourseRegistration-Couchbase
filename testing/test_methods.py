@@ -36,9 +36,9 @@ except:
 
 
 @retry_504
-def delete(path):
+def delete(path, data):
     print("--------------- DELETE", path)
-    r = requests.delete(path)
+    r = requests.delete(path, data)
     print(r.status_code, r.text)
     return r.status_code
 
