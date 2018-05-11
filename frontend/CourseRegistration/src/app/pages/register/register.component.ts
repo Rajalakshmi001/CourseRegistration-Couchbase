@@ -23,10 +23,7 @@ export class RegisterComponent implements OnInit {
   public offerings: String[];
   public quarters: { name: String, value: String }[];
   public lastVal: any;
-  public recommendedCourses: any[] = [
-    {courseNum: 'course1'},
-    {courseNum: 'course2'}
-  ];
+  public recommendedCourses: any[] = [ ];
 
   constructor(private http: Http,
     private notificationService: NotificationService,
